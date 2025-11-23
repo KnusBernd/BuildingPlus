@@ -10,6 +10,8 @@ namespace BuildingPlus.Selection
 {
     internal class SelectionCheckCollision
     {
+        static List<string> ingoring = new List<string>() { "Ceiling", "LeftWall", "RightWall", "DeathPit" };
+
 
         internal static HashSet<Placeable> checkCollision(Bounds bounds) 
         {
@@ -17,6 +19,8 @@ namespace BuildingPlus.Selection
 
             foreach (Placeable p in Placeable.AllPlaceables) 
             {
+                if (ingoring.Contains(p.name)) continue;
+
                 if (p.name.Contains("SpinningDeath"))
                 {
                     Vector2 start = new Vector2(p.transform.position.x, p.transform.position.y);
