@@ -75,7 +75,7 @@ namespace BuildingPlus.Selection
 
         internal void PickUp(Placeable head)
         {
-            if (head == null || !selectedPlaceables.Contains(head)) return;
+            if (head == null || !selectedPlaceables.Contains(head) || !Selector.Instance.CanPickUp) return;
             pickedUpPlaceables.Clear();
             pickedUpPlaceables.Add(head);
 
@@ -98,66 +98,40 @@ namespace BuildingPlus.Selection
             // -------------------------
             if (head == null || head.gameObject == null)
             {
-                BuildingPlusPlugin.LogWarning("[Drop] Head was null or destroyed. Cleaning up.");
+                //BuildingPlusPlugin.LogWarning("[Drop] Head was null or destroyed. Cleaning up.");
                 head = null;
                 pickedUpPlaceables.Clear();
                 return;
             }
-
-            // -------------------------
-            // CLEAN PICKUP LIST (SAFE)
-            // -------------------------
-            pickedUpPlaceables.RemoveAll(p =>
-                p == null ||
-                p.gameObject == null ||
-                p.transform == null
-            );
 
             // If only head remains, no need to detach
             if (pickedUpPlaceables.Count <= 1)
             {
-                BuildingPlusPlugin.LogInfo("[Drop] No attached pieces to detach.");
+                //BuildingPlusPlugin.LogInfo("[Drop] No attached pieces to detach.");
                 head = null;
                 pickedUpPlaceables.Clear();
                 return;
             }
 
-            // -------------------------
-            // DETACH SAFELY
-            // -------------------------
-            try
-            {
-                DetachPieces(head, pickedUpPlaceables);
-            }
-            catch (Exception ex)
-            {
-                // Should *never* happen with our safe DetachPieces, but if it does:
-                BuildingPlusPlugin.LogError($"[Drop] DetachPieces threw an exception: {ex}");
-            }
-
-            // -------------------------
-            // FINAL CLEANUP
-            // -------------------------
-            head.ChildPieces.Clear();
+            head.DetachAllChildren(true);
             head = null;
             pickedUpPlaceables.Clear();
-            BuildingPlusPlugin.LogInfo("[Drop] Completed safely.");
+            //BuildingPlusPlugin.LogInfo("[Drop] Completed safely.");
 
+            return;
+
+            //DetachPieces(head, pickedUpPlaceables);
         }
 
-        public void DetachPieces(Placeable head, List<Placeable> pieces)
+       /* public void DetachPieces(Placeable head, List<Placeable> pieces)
         {
             // Safety: no head = nothing to detach.
             if (head == null || head.gameObject == null)
             {
-                BuildingPlusPlugin.LogWarning("[DetachPieces] Head is null — aborting.");
                 return;
             }
 
-            BuildingPlusPlugin.LogInfo($"[DetachPieces] Start — head = {head.name}");
-
-            // --- SANITIZE LIST FIRST ---
-            BuildingPlusPlugin.LogInfo($"[DetachPieces] Initial list count: {pieces.Count}");
+            // --- SANITIZE ---
 
             pieces.RemoveAll(p =>
                 p == null ||
@@ -165,11 +139,9 @@ namespace BuildingPlus.Selection
                 p == head ||
                 p.ID == head.ID);
 
-            BuildingPlusPlugin.LogInfo($"[DetachPieces] After sanitizing: {pieces.Count} pieces.");
 
             if (pieces.Count == 0)
             {
-                BuildingPlusPlugin.LogInfo("[DetachPieces] No valid pieces to detach.");
                 return;
             }
 
@@ -178,93 +150,44 @@ namespace BuildingPlus.Selection
                 if (p == null || p.gameObject == null)
                     continue;
 
-                BuildingPlusPlugin.LogInfo($"[DetachPieces] Processing piece: {p.name} (ID:{p.ID})");
 
                 Transform t = p.transform;
 
                 // SAFETY CHECK: Transform can be missing if prefab replaced or object was destroyed
                 if (t == null)
                 {
-                    BuildingPlusPlugin.LogWarning($"[DetachPieces] Missing transform on: {p.name}");
                     continue;
                 }
 
                 // LOG CURRENT PARENT
                 string parentName = t.parent ? t.parent.name : "null";
-                BuildingPlusPlugin.LogInfo($"[DetachPieces] Parent before detach: {parentName}");
 
                 // Record world pose
                 Vector3 worldPos = t.position;
                 Quaternion worldRot = t.rotation;
 
-                // ----------------------
-                // DETACH (Safe version)
-                // ----------------------
-                try
+                t.SetParent(null, true);
+
+                // Log result of SetParent
+                parentName = t.parent ? t.parent.name : "null";
+
+                t.SetPositionAndRotation(worldPos, worldRot);
+              
+                if (head.ChildPieces.Contains(p))
                 {
-                    BuildingPlusPlugin.LogInfo($"[DetachPieces] Detaching {p.name}...");
-
-                    t.SetParent(null, true);
-
-                    // Log result of SetParent
-                    parentName = t.parent ? t.parent.name : "null";
-                    BuildingPlusPlugin.LogInfo($"[DetachPieces] Parent AFTER detach: {parentName}");
-
-                    t.SetPositionAndRotation(worldPos, worldRot);
-                }
-                catch (Exception ex)
-                {
-                    BuildingPlusPlugin.LogError($"[DetachPieces] Transform detach FAILED on {p.name}: {ex}");
-                    continue;
+                    head.ChildPieces.Remove(p);
                 }
 
-                // ----------------------
-                // CLEAN PARENT LINK
-                // ----------------------
-                try
+                if (p.ParentPiece == p)
                 {
                     p.ParentPiece = null;
-                    BuildingPlusPlugin.LogInfo($"[DetachPieces] Cleared ParentPiece on {p.name}");
+                    p.transform.parent = null;
+                    p.relativeAttachPosition = new Vector3(0f, 0f, 0f);
                 }
-                catch (Exception ex)
-                {
-                    BuildingPlusPlugin.LogError($"[DetachPieces] Failed clearing ParentPiece on {p.name}: {ex}");
-                }
-
-                // ----------------------
-                // CLEAN HEAD CHILD LIST
-                // ----------------------
-                try
-                {
-                    if (head.ChildPieces.Contains(p))
-                    {
-                        BuildingPlusPlugin.LogInfo($"[DetachPieces] Removing {p.name} from head.ChildPieces");
-                        head.ChildPieces.Remove(p);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    BuildingPlusPlugin.LogError($"[DetachPieces] Failed removing {p.name} from head: {ex}");
-                }
-
-                // ----------------------
-                // SAFE TINT
-                // ----------------------
-                try
-                {
-                    p.Tint();
-                    BuildingPlusPlugin.LogInfo($"[DetachPieces] Tint OK on {p.name}");
-                }
-                catch (Exception ex)
-                {
-                    BuildingPlusPlugin.LogError($"[DetachPieces] Tint failed on {p.name}: {ex}");
-                }
-
-                BuildingPlusPlugin.LogInfo($"[DetachPieces] Finished processing {p.name}");
+                p.Tint();
             }
 
-            BuildingPlusPlugin.LogInfo("[DetachPieces] Safe detach finished.");
-        }
+        } */
 
     }
 }

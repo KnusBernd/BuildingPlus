@@ -86,6 +86,7 @@
     <Compile Include="Patches\PiecePlacementCursorOnAcceptUpPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnSprintDownPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnSprintUpPatch.cs" />
+    <Compile Include="Patches\PiecePlacementCursorPlacePieceDeferredPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorStartPatch.cs" />
     <Compile Include="Patches\PlaceablePlacePatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

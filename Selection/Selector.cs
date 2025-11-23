@@ -22,7 +22,7 @@ namespace BuildingPlus.Selection
 
         private bool sprinting;
 
-        private float dragThreshold = 0.15f; // distance to activate drag mode
+        private float dragThreshold = 0.2f; // distance to activate drag mode
 
         private SelectorUI selectorUI;
 
@@ -50,6 +50,9 @@ namespace BuildingPlus.Selection
             {
                 isDraggingBox = true;
                 selectorUI.ShowOutline(true);
+                if (!Input.GetKey(KeyCode.LeftControl))
+                    selection.DeselectAll();
+
             }
 
             // If dragging, update rectangle
@@ -91,6 +94,9 @@ namespace BuildingPlus.Selection
         public bool OnAcceptUp()
         {
             pressed = false;
+
+            Placeable hovered = Cursor.hoveredPiece;
+            if (hovered != null && !CanPickUp) { return false;  }
 
             // Drag select mode
             if (isDraggingBox)
@@ -180,7 +186,7 @@ namespace BuildingPlus.Selection
 
         internal void Unlock() 
         {
-            selectionLocked = false; 
+            selectionLocked = false;
         }
     }
 }
