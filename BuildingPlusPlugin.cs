@@ -35,7 +35,10 @@ namespace BuildingPlus
             PiecePlacementCursorOnSprintDownPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnSprintUpPatch.ApplyPatch(harmony);
             PiecePlacementCursorStartPatch.ApplyPatch(harmony);
+            PlaceablePlacePatch.ApplyPatch(harmony);
             LogInfo("Plugin loaded.");
+
+
         }
 
         public static void LogInfo(string message)

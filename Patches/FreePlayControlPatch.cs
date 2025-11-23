@@ -29,6 +29,7 @@ namespace BuildingPlus.Patches
         {
             BuildingPlusPlugin.LogInfo($"SetupStart called with mode {mode}");
 
+
             if (__instance != null && __instance.gameObject != null)
             {
                 if (__instance.gameObject.GetComponent<Selector>() == null)

@@ -30,7 +30,9 @@ namespace BuildingPlus.Patches
 
         private static bool OnAcceptUpPrefix(PiecePlacementCursor __instance)
         {
-            return Selector.Instance.OnAcceptUp();
+            if (LobbyManager.instance.AllLocal)
+                return Selector.Instance.OnAcceptUp();
+            return true;
         }
 
         private static void OnAcceptUpPostfix(PiecePlacementCursor __instance)

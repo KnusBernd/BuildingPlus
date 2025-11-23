@@ -27,7 +27,9 @@ namespace BuildingPlus.Patches
 
         private static bool OnSprintUpPrefix(PiecePlacementCursor __instance)
         {
-            return Selector.Instance.OnSprintUp();
+            if (LobbyManager.instance.AllLocal)
+                return Selector.Instance.OnSprintUp();
+            else return true;
         }
     }
 }

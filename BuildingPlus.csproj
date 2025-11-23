@@ -87,11 +87,13 @@
     <Compile Include="Patches\PiecePlacementCursorOnSprintDownPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnSprintUpPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorStartPatch.cs" />
+    <Compile Include="Patches\PlaceablePlacePatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Selection\SelectionCheckCollision.cs" />
     <Compile Include="Selection\SelectionHighlight.cs" />
     <Compile Include="Selection\SelectionManager.cs" />
     <Compile Include="Selection\Selector.cs" />
+    <Compile Include="Selection\SelectorUI.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
