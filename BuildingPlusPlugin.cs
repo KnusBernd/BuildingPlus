@@ -36,65 +36,6 @@ namespace BuildingPlus
             PiecePlacementCursorOnSprintUpPatch.ApplyPatch(harmony);
             PiecePlacementCursorStartPatch.ApplyPatch(harmony);
             LogInfo("Plugin loaded.");
-            string[] shadersToCheck = new string[]
-        {
-            // Standard shaders
-            "Standard",
-            "Standard (Specular setup)",
-            "Standard (Roughness setup)",
-            
-            // Unlit
-            "Unlit/Color",
-            "Unlit/Texture",
-            "Unlit/Transparent",
-            "Unlit/Transparent Cutout",
-            
-            // Sprites
-            "Sprites/Default",
-            "Sprites/Diffuse",
-            "Sprites/Mask",
-            
-            // UI
-            "UI/Default",
-            "UI/Unlit/Transparent",
-            "UI/Unlit/Text",
-            
-            // Particles
-            "Particles/Standard Surface",
-            "Particles/Standard Unlit",
-            "Particles/Alpha Blended",
-            "Particles/Multiply",
-            "Particles/Additive",
-            
-            // Legacy shaders
-            "Legacy Shaders/Diffuse",
-            "Legacy Shaders/Transparent/Diffuse",
-            "Legacy Shaders/Transparent/Cutout/Diffuse",
-            "Legacy Shaders/VertexLit",
-            "Legacy Shaders/Transparent/VertexLit",
-            
-            // Other common shaders
-            "Mobile/Unlit (Supports Lightmap)",
-            "Mobile/Particles/VertexLit Blended",
-            "FX/Unlit/Transparent",
-            "FX/Glass",
-            "FX/Water",
-            "FX/Flare",
-            "FX/Reveal",
-            "FX/Skybox",
-            "FX/Fire"
-        };
-
-            Debug.Log("=== Checking shaders at runtime ===");
-
-            foreach (string shaderName in shadersToCheck)
-            {
-                Shader s = Shader.Find(shaderName);
-                if (s != null)
-                    Debug.Log($"Shader found: {shaderName}");
-                else
-                    Debug.LogWarning($"Shader missing: {shaderName}");
-            }
         }
 
         public static void LogInfo(string message)
