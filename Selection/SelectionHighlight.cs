@@ -20,7 +20,6 @@ namespace BuildingPlus.Selection
             placeable = GetComponent<Placeable>();
         }
 
-
         private void CreateVisuals()
         {
             // Root
@@ -59,7 +58,7 @@ namespace BuildingPlus.Selection
 
                 mat.color = new Color(0.2f, 0.5f, 1f, 0.45f);
                 mr.sortingLayerName = "UI 1";
-                mat.renderQueue = 5000; // always on top
+                mr.sortingOrder = 13000;
                 mat.SetInt("_ZWrite", 0);
                 mat.SetInt("_ZTest", (int)UnityEngine.Rendering.CompareFunction.Always);
                 mat.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
@@ -84,7 +83,8 @@ namespace BuildingPlus.Selection
 
                 var b = colliders[0].bounds;
 
-                quad.transform.position = b.center;
+                quad.transform.position = b.center + new Vector3(0, 0, -0.01f);
+
                 quad.transform.localScale = new Vector3(b.size.x, b.size.y, 1f);
             }
         }

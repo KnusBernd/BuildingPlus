@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BuildingPlus.Selection
@@ -11,26 +12,25 @@ namespace BuildingPlus.Selection
         private bool pressed = false;           // accept button is being held
         private Vector3 startPos;
         private Vector3 endPos;
+        private bool selectionLocked = false;
+        public bool CanPickUp => !selectionLocked;
 
         public PiecePlacementCursor Cursor { get; set; }
+        public SelectionManager Selection => selection;
 
-        private LineRenderer outlineRendererVisual;
-        private GameObject selectionFill;
-        private Material fillMaterial;
         private SelectionManager selection;
 
-        private GameObject selectionOutlineRoot;
-
         private bool sprinting;
-        public bool Sprinting => sprinting;
 
         private float dragThreshold = 0.15f; // distance to activate drag mode
+
+        private SelectorUI selectorUI;
 
         void Start()
         {
             selection = new SelectionManager();
             Instance = this;
-            CreateSelectionVisuals();
+            selectorUI = new SelectorUI(transform); // initialize UI
         }
 
         void Update()
@@ -49,14 +49,14 @@ namespace BuildingPlus.Selection
             if (!isDraggingBox && dist > dragThreshold)
             {
                 isDraggingBox = true;
-                selectionOutlineRoot.SetActive(true);
+                selectorUI.ShowOutline(true);
             }
 
             // If dragging, update rectangle
             if (isDraggingBox)
             {
                 endPos = cursorPos;
-                UpdateSelectionBox(startPos, endPos);
+                selectorUI.UpdateBox(startPos, endPos);
             }
         }
 
@@ -65,9 +65,14 @@ namespace BuildingPlus.Selection
         // ---------------------------------------------------------------------
         public bool OnAcceptDown()
         {
+            if (!CanPickUp)
+                return false;
+
             // Can't select while building a piece
             if (Cursor.Piece != null)
                 return true;
+
+   
 
             pressed = true;
             isDraggingBox = false;
@@ -83,63 +88,76 @@ namespace BuildingPlus.Selection
             return true;
         }
 
-        // ---------------------------------------------------------------------
-        // ACCEPT UP
-        // ---------------------------------------------------------------------
         public bool OnAcceptUp()
         {
             pressed = false;
 
-            // ---------------------------------------------------
-            // DRAG SELECT MODE
-            // ---------------------------------------------------
+            // Drag select mode
             if (isDraggingBox)
-            {
-                selectionOutlineRoot.SetActive(false);
+                return HandleDragSelection();
 
-                Vector3 min = Vector3.Min(startPos, endPos);
-                Vector3 max = Vector3.Max(startPos, endPos);
+            // Click select mode
+            return HandleClickSelection();
+        }
 
-                Bounds selectionBounds = new Bounds();
-                selectionBounds.SetMinMax(min, max);
+        // ---------------------------------------------------------------------
+        // Handles drag selection logic
+        // ---------------------------------------------------------------------
+        private bool HandleDragSelection()
+        {
+            selectorUI.ShowOutline(false);
 
-                var placeables = SelectionCheckCollision.checkCollision(selectionBounds);
+            Vector3 min = Vector3.Min(startPos, endPos);
+            Vector3 max = Vector3.Max(startPos, endPos);
 
-                foreach (var placeable in placeables)
-                {
-                    selection.Select(placeable);
-                    //BuildingPlusPlugin.LogInfo(placeable.name + "selected");
-                }
+            Bounds selectionBounds = new Bounds();
+            selectionBounds.SetMinMax(min, max);
 
-                return false;
-            }
+            var placeables = SelectionCheckCollision.checkCollision(selectionBounds);
 
-            // ---------------------------------------------------
-            // CLICK SELECT MODE
-            // ---------------------------------------------------
+            foreach (var placeable in placeables)
+                selection.Select(placeable);
+
+            return false;
+        }
+
+        // ---------------------------------------------------------------------
+        // Handles click selection logic
+        // ---------------------------------------------------------------------
+        private bool HandleClickSelection()
+        {
             var hovered = Cursor.hoveredPiece;
 
-            if (hovered == null)
+            // Nothing hovered and nothing selected
+            if (hovered == null && selection.GetSelectedPlaceables().Count == 0)
                 return true;
 
-            // Normal click = single select
-            if (selection.GetSelectedPlaceables().Count > 0 && Input.GetKey(KeyCode.LeftControl)) 
-            { 
-                if (selection.GetSelectedPlaceables().Contains(hovered)) 
-                {
-                    selection.Deselect(hovered);
-                } else 
-                { 
-                    selection.Select(hovered);
-                }
-                return false;
+            // Control key modifies selection
+            if (Input.GetKey(KeyCode.LeftControl))
+                return HandleSingleSelect(hovered);
 
+            // Normal click = pick up hovered
+            //
+            if (hovered is MultipiecePart) 
+            {
+                selection.DeselectAll();
             }
+            selection.PickUp(hovered);
 
-            selection.DeselectAll();
-            selection.Select(hovered);
+            return true;
+        }
 
-            return true ;
+        // ---------------------------------------------------------------------
+        // Handles single-select with Control key
+        // ---------------------------------------------------------------------
+        private bool HandleSingleSelect(Placeable hovered)
+        {
+            if (selection.GetSelectedPlaceables().Contains(hovered))
+                selection.Deselect(hovered);
+            else
+                selection.Select(hovered);
+
+            return false;
         }
 
         // ---------------------------------------------------------------------
@@ -155,59 +173,14 @@ namespace BuildingPlus.Selection
             return true;
         }
 
-        // ---------------------------------------------------------------------
-        // CREATE VISUALS
-        // ---------------------------------------------------------------------
-        private void CreateSelectionVisuals()
+        internal void Lock()
         {
-            selectionOutlineRoot = new GameObject("SelectionOutlineRoot");
-            selectionOutlineRoot.transform.SetParent(transform);
-            selectionOutlineRoot.SetActive(false);
-
-            // Outline
-            GameObject outlineObj = new GameObject("Outline");
-            outlineObj.transform.SetParent(selectionOutlineRoot.transform);
-
-            outlineRendererVisual = outlineObj.AddComponent<LineRenderer>();
-            outlineRendererVisual.material = new Material(Shader.Find("Sprites/Default"));
-            outlineRendererVisual.startColor = outlineRendererVisual.endColor = new Color(0.2f, 0.5f, 1f, 0.65f);
-            outlineRendererVisual.startWidth = outlineRendererVisual.endWidth = 0.05f;
-            outlineRendererVisual.loop = false;
-            outlineRendererVisual.positionCount = 5;
-            outlineRendererVisual.sortingLayerName = "UI";
-            outlineRendererVisual.sortingOrder = 32767;
-
-            // Fill
-            selectionFill = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            Destroy(selectionFill.GetComponent<Collider>());
-            selectionFill.transform.SetParent(selectionOutlineRoot.transform);
-
-            fillMaterial = new Material(Shader.Find("Sprites/Default"));
-            fillMaterial.color = new Color(0.2f, 0.5f, 1f, 0.15f);
-
-            var fillRenderer = selectionFill.GetComponent<MeshRenderer>();
-            fillRenderer.material = fillMaterial;
-            fillRenderer.sortingLayerName = "UI";
-            fillRenderer.sortingOrder = 32766;
+            selectionLocked = true;
         }
 
-        // ---------------------------------------------------------------------
-        private void UpdateSelectionBox(Vector3 a, Vector3 b)
+        internal void Unlock() 
         {
-            Vector3 min = Vector3.Min(a, b);
-            Vector3 max = Vector3.Max(a, b);
-
-            Vector3[] corners = new Vector3[5];
-            corners[0] = new Vector3(min.x, min.y);
-            corners[1] = new Vector3(min.x, max.y);
-            corners[2] = new Vector3(max.x, max.y);
-            corners[3] = new Vector3(max.x, min.y);
-            corners[4] = corners[0];
-
-            outlineRendererVisual.SetPositions(corners);
-
-            selectionFill.transform.position = (min + max) * 0.5f;
-            selectionFill.transform.localScale = new Vector3(max.x - min.x, max.y - min.y, 1f);
+            selectionLocked = false; 
         }
     }
 }

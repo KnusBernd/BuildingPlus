@@ -12,7 +12,6 @@ namespace BuildingPlus.Selection
     {
         static List<string> ingoring = new List<string>() { "Ceiling", "LeftWall", "RightWall", "DeathPit" };
 
-
         internal static HashSet<Placeable> checkCollision(Bounds bounds) 
         {
             HashSet<Placeable> placeables = new HashSet<Placeable>();
