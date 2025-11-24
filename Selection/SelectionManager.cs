@@ -117,7 +117,6 @@ namespace BuildingPlus.Selection
                 pickedUpPlaceables.Clear();
                 return;
             }
-
             head.DetachAllChildren(true);
             head = null;
             pickedUpPlaceables.Clear();
@@ -217,7 +216,6 @@ namespace BuildingPlus.Selection
 
             // Set the new HEAD
             List<Placeable> newSel = new List<Placeable>();
-            newSel.Add(newHead);
             foreach (var p in selectedPlaceables)
             {
                 if (p.ID == newHead.ID)
@@ -248,7 +246,7 @@ namespace BuildingPlus.Selection
                 placeable.Tint();
                 newSel.Add(placeable);
                 // Attach
-                newHead.AttachPiece(placeable);
+                placeable.transform.SetParent(newHead.transform, worldPositionStays: true);
 
                 BuildingPlusPlugin.LogInfo(
                     $"[Postfix] Attached new piece {placeable.name} at {newWorldPos} rot {newWorldRot.eulerAngles}"

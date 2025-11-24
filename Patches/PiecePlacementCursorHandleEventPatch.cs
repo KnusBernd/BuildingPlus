@@ -20,11 +20,11 @@ namespace BuildingPlus.Patches
             var method = AccessTools.Method(typeof(PiecePlacementCursor), "handleEvent", new Type[] { typeof(global::GameEvent.GameEvent) });
             if (method != null)
             {
-                var postfix = AccessTools.Method(typeof(PiecePlacementCursorHandleEventPatch), nameof(HandleEventPostfix));
+                var prefix = AccessTools.Method(typeof(PiecePlacementCursorHandleEventPatch), nameof(HandleEventPrefix));
 
                 // Apply only postfix; prefix is no longer needed
                 harmony.Patch(method,
-                    postfix: new HarmonyMethod(postfix));
+                    prefix: new HarmonyMethod(prefix));
 
                 BuildingPlusPlugin.LogInfo("Patched PiecePlacementCursor.handleEvent with postfix successfully");
             }
@@ -34,91 +34,61 @@ namespace BuildingPlus.Patches
             }
         }
 
-        private static void HandleEventPostfix(PiecePlacementCursor __instance, global::GameEvent.GameEvent e)
+        private static bool HandleEventPrefix(PiecePlacementCursor __instance, global::GameEvent.GameEvent e)
         {
 
             if (Selector.Instance == null)
             {
-                return;
+                return true; // call method
             }
 
             if (e.GetType() != typeof(PickBlockEvent))
             {
-                return;
+                return true;
             }
 
             PickBlockEvent pickBlockEvent = (PickBlockEvent)e;
             var cursor = Selector.Instance.Cursor;
+            var selection = Selector.Instance.Selection;
 
             if (cursor == null)
             {
-                BuildingPlusPlugin.LogError("Selector cursor was null!");
-                return;
+                return true;
             }
-
+            Placeable place = cursor.hoveredPiece;
             int cursorPlayer = cursor.AssociatedGamePlayer.networkNumber;
 
             BuildingPlusPlugin.LogInfo(
                 $"PickBlockEvent received. PlayerNumber={pickBlockEvent.PlayerNumber}, CursorPlayer={cursorPlayer}"
             );
 
-            if (pickBlockEvent.PlayerNumber != cursorPlayer)
-            {
-                BuildingPlusPlugin.LogInfo("PickBlockEvent player does not match cursor player. Ignoring.");
-                return;
-            }
-
-            if (pickBlockEvent.PickablePiece == null)
-            {
-                BuildingPlusPlugin.LogWarning("PickBlockEvent.PickablePiece was null. Ignoring.");
-                return;
-            }
-
-            var selection = Selector.Instance.Selection;
-            if (selection == null)
-            {
-                BuildingPlusPlugin.LogError("Selector.Instance.Selection was null!");
-                return;
-            }
-
-            var selected = selection.GetSelectedPlaceables();
-            if (!selected.Contains(pickBlockEvent.ReuseTransformPlaceable))
-            {
-                BuildingPlusPlugin.LogInfo("Picked piece not in selected placeables. Ignoring.");
-                return;
-            }
-
-            BuildingPlusPlugin.LogInfo("Valid pick — starting CopyPaste coroutine.");
-            BuildingPlusPlugin.Instance.StartCoroutine(CopyPaste());
+            BuildingPlusPlugin.Instance.StartCoroutine(Copy());
+          
+            return false; 
         }
 
-        private static IEnumerator CopyPaste()
+        private static IEnumerator Copy()
         {
             var cursor = Selector.Instance.Cursor;
             var selection = Selector.Instance.Selection;
+            Placeable place = cursor.hoveredPiece;
 
-            // 1. Copy pieces relative to cursor
-            var newSel = selection.CopySelectedPlaceablesRelativeTo(cursor.Piece);
+            Placeable placeable = UnityEngine.Object.Instantiate(place.PickableBlock.placeablePrefab);
+            placeable.GenerateIDOnPick(placeable.ID, cursor.AssociatedGamePlayer.networkNumber);
+            placeable.SetColor(place.CustomColor);
+            placeable.SetInitialDamageLevel(place.damageLevel, true);
+            placeable.transform.SetPositionAndRotation(place.transform.position, place.transform.rotation);
 
-            if (newSel == null || newSel.Count == 0) yield break;
-
-            // 2. Clear old selection
-            selection.DeselectAll();
-
-            // 3. Set picked-up list and head
-            selection.GetPickedUpPlaceables().Clear();
-            selection.GetPickedUpPlaceables().AddRange(newSel);
-            selection.Head = newSel[0]; // new head
-
-            // 4. Highlight new pieces
-            foreach (var p in newSel)
-            {
-                var highlight = p.GetComponent<SelectionHighlight>();
-                if (!highlight) highlight = p.gameObject.AddComponent<SelectionHighlight>();
-                highlight.Show();
-            }
-
+            var newSel = selection.CopySelectedPlaceablesRelativeTo(placeable);
             yield return null;
+            yield return null;
+            yield return null;
+            cursor.SetPiece(placeable, destroyPrevious: true);
+            cursor.KeepPiece = false;
+            yield return null;
+            BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
+            BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
+
         }
     }
 }

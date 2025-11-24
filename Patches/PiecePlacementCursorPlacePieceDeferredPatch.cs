@@ -65,8 +65,13 @@ namespace BuildingPlus.Patches
             if (!headPlaced)
                 return;
             Selector.Instance.Lock();
+
+            foreach (var place in Selector.Instance?.Selection.GetPickedUpPlaceables())
+            {
+                place.Place(__instance.AssociatedGamePlayer.networkNumber);
+            }
             BuildingPlusPlugin.Instance.StartCoroutine(WaitForPlaceablesPlaced());
-            //BuildingPlusPlugin.LogInfo("Dropping Selection");
+            BuildingPlusPlugin.LogInfo("Dropping Selection");
 
         }
 
