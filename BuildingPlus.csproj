@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="BuildingPlusPlugin.cs" />
     <Compile Include="Patches\FreePlayControlPatch.cs" />
+    <Compile Include="Patches\PiecePlacementCursorHandleEventPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnAcceptDownPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnAcceptUpPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnSprintDownPatch.cs" />

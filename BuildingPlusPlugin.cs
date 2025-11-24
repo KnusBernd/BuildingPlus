@@ -30,6 +30,7 @@ namespace BuildingPlus
             harmony = new Harmony("BuildingPlus");
 
             FreePlayControlPatch.ApplyPatch(harmony);
+            PiecePlacementCursorHandleEventPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnAcceptDownPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnAcceptUpPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnSprintDownPatch.ApplyPatch(harmony);

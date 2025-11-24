@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GameEvent;
 using UnityEngine;
 
 namespace BuildingPlus.Selection
@@ -13,8 +14,11 @@ namespace BuildingPlus.Selection
         public List<Placeable> GetPickedUpPlaceables() => pickedUpPlaceables;
 
         public List<Placeable> GetSelectedPlaceables() => selectedPlaceables;
-        public Placeable Head { get { return head; } }
-
+        public Placeable Head
+        {
+            get { return head; }
+            set { head = value; }
+        }
         // --------------------------------------------------
         //  Deselect ALL – SAFE VERSION (no modified-while-enum)
         // --------------------------------------------------
@@ -25,6 +29,7 @@ namespace BuildingPlus.Selection
 
             foreach (var placeable in copy)
                 Deselect(placeable);
+            selectedPlaceables.Clear();
         }
 
         // --------------------------------------------------
@@ -123,71 +128,137 @@ namespace BuildingPlus.Selection
             //DetachPieces(head, pickedUpPlaceables);
         }
 
-       /* public void DetachPieces(Placeable head, List<Placeable> pieces)
+        /* public void DetachPieces(Placeable head, List<Placeable> pieces)
+         {
+             // Safety: no head = nothing to detach.
+             if (head == null || head.gameObject == null)
+             {
+                 return;
+             }
+
+             // --- SANITIZE ---
+
+             pieces.RemoveAll(p =>
+                 p == null ||
+                 p.gameObject == null ||
+                 p == head ||
+                 p.ID == head.ID);
+
+
+             if (pieces.Count == 0)
+             {
+                 return;
+             }
+
+             foreach (var p in pieces.Distinct())
+             {
+                 if (p == null || p.gameObject == null)
+                     continue;
+
+
+                 Transform t = p.transform;
+
+                 // SAFETY CHECK: Transform can be missing if prefab replaced or object was destroyed
+                 if (t == null)
+                 {
+                     continue;
+                 }
+
+                 // LOG CURRENT PARENT
+                 string parentName = t.parent ? t.parent.name : "null";
+
+                 // Record world pose
+                 Vector3 worldPos = t.position;
+                 Quaternion worldRot = t.rotation;
+
+                 t.SetParent(null, true);
+
+                 // Log result of SetParent
+                 parentName = t.parent ? t.parent.name : "null";
+
+                 t.SetPositionAndRotation(worldPos, worldRot);
+
+                 if (head.ChildPieces.Contains(p))
+                 {
+                     head.ChildPieces.Remove(p);
+                 }
+
+                 if (p.ParentPiece == p)
+                 {
+                     p.ParentPiece = null;
+                     p.transform.parent = null;
+                     p.relativeAttachPosition = new Vector3(0f, 0f, 0f);
+                 }
+                 p.Tint();
+             }
+
+         } */
+
+        public List<Placeable> CopySelectedPlaceablesRelativeTo(Placeable newHead)
         {
-            // Safety: no head = nothing to detach.
-            if (head == null || head.gameObject == null)
+            if (newHead == null || selectedPlaceables.Count == 0)
+                return null;
+
+            var cursor = Selector.Instance.Cursor;
+            int cursorPlayer = cursor.AssociatedGamePlayer.networkNumber;
+            // The piece the cursor is NOW holding (after pickup)
+
+            // ✔ Anchor position and rotation are the REAL world transform of the held piece
+            Vector3 anchorWorldPos = newHead.transform.position;
+            Quaternion anchorWorldRot = newHead.transform.rotation;
+
+            BuildingPlusPlugin.LogInfo("[Postfix] Anchor world pos = " + anchorWorldPos);
+            BuildingPlusPlugin.LogInfo("[Postfix] Anchor world rot = " + anchorWorldRot.eulerAngles);
+
+            // The reused piece *before* pickup
+            
+            Vector3 reusedOldPos = newHead.transform.position;
+            Quaternion reusedOldRot = newHead.transform.rotation;
+
+            // Set the new HEAD
+            List<Placeable> newSel = new List<Placeable>();
+            newSel.Add(newHead);
+            foreach (var p in selectedPlaceables)
             {
-                return;
-            }
-
-            // --- SANITIZE ---
-
-            pieces.RemoveAll(p =>
-                p == null ||
-                p.gameObject == null ||
-                p == head ||
-                p.ID == head.ID);
-
-
-            if (pieces.Count == 0)
-            {
-                return;
-            }
-
-            foreach (var p in pieces.Distinct())
-            {
-                if (p == null || p.gameObject == null)
+                if (p.ID == newHead.ID)
                     continue;
 
+                // === Compute original local offset relative to the reused piece ===
+                Vector3 localOffsetPos =
+                    Quaternion.Inverse(reusedOldRot) * (p.transform.position - reusedOldPos);
 
-                Transform t = p.transform;
+                Quaternion localOffsetRot =
+                    Quaternion.Inverse(reusedOldRot) * p.transform.rotation;
 
-                // SAFETY CHECK: Transform can be missing if prefab replaced or object was destroyed
-                if (t == null)
-                {
-                    continue;
-                }
+                // === Apply that offset to the new anchor (held piece) ===
+                Vector3 newWorldPos = anchorWorldPos + (anchorWorldRot * localOffsetPos);
+                Quaternion newWorldRot = anchorWorldRot * localOffsetRot;
 
-                // LOG CURRENT PARENT
-                string parentName = t.parent ? t.parent.name : "null";
+                // Instantiate new piece
+                Placeable placeable = UnityEngine.Object.Instantiate(
+                    p.PickableBlock.placeablePrefab,
+                    newWorldPos,
+                    newWorldRot
+                );
 
-                // Record world pose
-                Vector3 worldPos = t.position;
-                Quaternion worldRot = t.rotation;
+                placeable.GenerateIDOnPick(placeable.ID, cursorPlayer);
+                placeable.SetColor(p.CustomColor);
+                placeable.SetInitialDamageLevel(p.damageLevel, allowDamageReset: true);
+                placeable.transform.SetPositionAndRotation(newWorldPos, newWorldRot);
+                placeable.Tint();
+                newSel.Add(placeable);
+                // Attach
+                newHead.AttachPiece(placeable);
 
-                t.SetParent(null, true);
-
-                // Log result of SetParent
-                parentName = t.parent ? t.parent.name : "null";
-
-                t.SetPositionAndRotation(worldPos, worldRot);
-              
-                if (head.ChildPieces.Contains(p))
-                {
-                    head.ChildPieces.Remove(p);
-                }
-
-                if (p.ParentPiece == p)
-                {
-                    p.ParentPiece = null;
-                    p.transform.parent = null;
-                    p.relativeAttachPosition = new Vector3(0f, 0f, 0f);
-                }
-                p.Tint();
+                BuildingPlusPlugin.LogInfo(
+                    $"[Postfix] Attached new piece {placeable.name} at {newWorldPos} rot {newWorldRot.eulerAngles}"
+                );
             }
-
-        } */
-
+            foreach (var p in new List<Placeable>(selectedPlaceables))
+            { 
+                Deselect(p);
+            }
+            return newSel;
+        }
     }
 }

@@ -142,6 +142,8 @@ namespace BuildingPlus.Selection
             if (Input.GetKey(KeyCode.LeftControl))
                 return HandleSingleSelect(hovered);
 
+
+            BuildingPlusPlugin.LogInfo( "keep piece: " + Cursor.KeepPiece);
             // Normal click = pick up hovered
             //
             if (hovered is MultipiecePart) 
