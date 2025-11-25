@@ -26,9 +26,12 @@ namespace BuildingPlus
         {
             Instance = this;
 
+            BuildingPlusConfig.BindConfig(Config);
+
             // Initialize Harmony
             harmony = new Harmony("BuildingPlus");
 
+            GameControlPatch.ApplyPatch(harmony);
             FreePlayControlPatch.ApplyPatch(harmony);
             PiecePlacementCursorHandleEventPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnAcceptDownPatch.ApplyPatch(harmony);
@@ -37,10 +40,9 @@ namespace BuildingPlus
             PiecePlacementCursorOnSprintUpPatch.ApplyPatch(harmony);
             PiecePlacementCursorStartPatch.ApplyPatch(harmony);
             PiecePlacementCursorPlacePieceDeferredPatch.ApplyPatch(harmony);
-
+            
             //PlaceablePlacePatch.ApplyPatch(harmony);
             LogInfo("Plugin loaded.");
-
 
         }
 

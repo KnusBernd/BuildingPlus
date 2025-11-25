@@ -71,7 +71,7 @@ namespace BuildingPlus.Selection
             selectionFill.transform.SetParent(selectionOutlineRoot.transform);
 
             fillMaterial = new Material(Shader.Find("Sprites/Default"));
-            fillMaterial.color = new Color(0.2f, 0.5f, 1f, 0.15f);
+            fillMaterial.color = new Color(0.2f, 0.5f, 1f, 0.35f);
 
             var fillRenderer = selectionFill.GetComponent<MeshRenderer>();
             fillRenderer.material = fillMaterial;
