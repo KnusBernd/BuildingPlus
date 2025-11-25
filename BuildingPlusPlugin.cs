@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Logging;
 using BuildingPlus.Patches;
+using BuildingPlus.UI;
 using HarmonyLib;
 using UnityEngine;
 
@@ -18,7 +19,9 @@ namespace BuildingPlus
 
         internal static BuildingPlusPlugin Instance { get; private set; }
         internal static ManualLogSource LoggerInstance => Instance.Logger;
-        
+        private ColorPickerDialog dialog;
+
+        public ColorPickerDialog Dialog => dialog;
 
         private Harmony harmony;
 
@@ -32,6 +35,8 @@ namespace BuildingPlus
             harmony = new Harmony("BuildingPlus");
 
             GameControlPatch.ApplyPatch(harmony);
+            InventoryBookPatch.ApplyPatch(harmony);
+            PickableCustomizationButtonPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnAcceptDownPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnAcceptUpPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnSprintDownPatch.ApplyPatch(harmony);
@@ -42,6 +47,20 @@ namespace BuildingPlus
             //PlaceablePlacePatch.ApplyPatch(harmony);
             LogInfo("Plugin loaded.");
 
+        }
+        void Start()
+        {
+            dialog = new ColorPickerDialog();
+        }
+
+        private void OnGUI()
+        {
+            dialog.Draw();
+        }
+
+        private void OnColorPicked(Color pickedColor)
+        {
+            throw new NotImplementedException();
         }
 
         public static void LogInfo(string message)

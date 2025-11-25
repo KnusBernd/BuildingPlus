@@ -78,10 +78,25 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Ultimate Chicken Horse\UltimateChickenHorse_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UIElementsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Ultimate Chicken Horse\UltimateChickenHorse_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsNativeModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Ultimate Chicken Horse\UltimateChickenHorse_Data\Managed\UnityEngine.UIElementsNativeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Ultimate Chicken Horse\UltimateChickenHorse_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildingPlusConfig.cs" />
     <Compile Include="BuildingPlusPlugin.cs" />
+    <Compile Include="Patches\InventoryBookPatch.cs" />
+    <Compile Include="Patches\PickableCustomizationButtonPatch.cs" />
+    <Compile Include="UI\ColorPickerDialog.cs" />
     <Compile Include="Patches\GameControlPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnAcceptDownPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnAcceptUpPatch.cs" />
