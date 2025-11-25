@@ -89,7 +89,7 @@ namespace BuildingPlus.Patches
             yield return new WaitForSeconds(0.2f); // idk maybe do something different but this work for me.
 
             Selector.Instance.Selection.Drop();
-            yield return new WaitForSeconds(0.2f); // idk maybe do something different but this work for me.
+            yield return new WaitForSeconds(BuildingPlusConfig.SelectionUnlockDelay.Value); // idk maybe do something different but this work for me.
 
             Selector.Instance.Unlock();
 

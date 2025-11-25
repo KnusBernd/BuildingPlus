@@ -50,27 +50,27 @@ namespace BuildingPlus.Selection
                 return;
 
             // Already selected? Stop here.
-            if (selectedPlaceables.Contains(place))
+            if (selectedPlaceables.Contains(place) || selectedPlaceables.Contains(place.GetTopPiece()))
                 return;
 
-            // Add this placeable FIRST to avoid recursive re-entry
-            selectedPlaceables.Add(place);
+            Placeable newEntry = place.GetTopPiece();
+            selectedPlaceables.Add(newEntry);
 
             // Ensure highlight exists and show it
-            var highlight = place.GetComponent<SelectionHighlight>();
+            var highlight = newEntry.GetComponent<SelectionHighlight>();
             if (highlight == null)
-                highlight = place.gameObject.AddComponent<SelectionHighlight>();
+                highlight = newEntry.gameObject.AddComponent<SelectionHighlight>();
 
             highlight.Show();
 
             // Safely iterate children without modifying list during recursion
-            var children = place.ChildPieces.ToList();
+           /* var children = newEntry.ChildPieces.ToList();
 
             foreach (var child in children)
             {
                 if (child != null)
                     Select(child);
-            }
+            }*/
         }
 
         internal void PickUp(Placeable head)
@@ -114,6 +114,7 @@ namespace BuildingPlus.Selection
             }
 
             head.DetachAllChildren(true);
+            
             head = null;
             pickedUpPlaceables.Clear();
             //BuildingPlusPlugin.LogInfo("[Drop] Completed safely.");
