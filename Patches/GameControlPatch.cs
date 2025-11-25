@@ -87,7 +87,12 @@ namespace BuildingPlus.Patches
                 p.IgnorePlacementRules = false;
                 p.IgnoreBounds = false; 
             }
-
+            foreach (GameObject g in PlaceableMetadataList.Instance.extraBlocks)
+            {
+                Placeable p = g.GetComponent<Placeable>();
+                p.IgnorePlacementRules = false;
+                p.IgnoreBounds = false;
+            }
         }
     }
 }
