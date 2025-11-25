@@ -40,8 +40,10 @@ namespace BuildingPlus.Patches
 
         private static void OnAcceptDownPostfix(PiecePlacementCursor __instance)
         {
-            //BuildingPlusPlugin.LogInfo("PiecePlacementCursor.OnAcceptDown postfix fired");
-
+            BuildingPlusPlugin.LogInfo("PiecePlacementCursor.OnAcceptDown postfix fired");
+            SelectionManager selection = Selector.Instance.Selection;
+            BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
+            BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
         }
 
     }

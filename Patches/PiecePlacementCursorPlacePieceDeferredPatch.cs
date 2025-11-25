@@ -89,7 +89,7 @@ namespace BuildingPlus.Patches
                     if (!p.Placed) return false;
                 }
                 return true;
-            });
+            }); // 1.93 1.959
 
             yield return new WaitForSeconds(0.2f); // idk maybe do something different but this work for me.
 

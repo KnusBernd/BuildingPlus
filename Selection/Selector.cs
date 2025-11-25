@@ -75,7 +75,6 @@ namespace BuildingPlus.Selection
             if (Cursor.Piece != null)
                 return true;
 
-   
 
             pressed = true;
             isDraggingBox = false;
@@ -87,6 +86,10 @@ namespace BuildingPlus.Selection
             // If not sprinting, clear old selection
             if (!Input.GetKey(KeyCode.LeftControl) && Cursor.hoveredPiece == null)
                 selection.DeselectAll();
+
+
+            BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
+            BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
 
             return true;
         }
