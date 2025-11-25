@@ -83,7 +83,6 @@
     <Compile Include="BuildingPlusConfig.cs" />
     <Compile Include="BuildingPlusPlugin.cs" />
     <Compile Include="Patches\GameControlPatch.cs" />
-    <Compile Include="Patches\FreePlayControlPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorHandleEventPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnAcceptDownPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnAcceptUpPatch.cs" />
