@@ -54,7 +54,6 @@ namespace BuildingPlus.Patches
             }
             foreach (Placeable p in Placeable.AllPlaceables)
             {
-                 
                 p.IgnorePlacementRules = BuildingPlusConfig.IgnorePlacementRules.Value;
                 p.IgnoreBounds = BuildingPlusConfig.IgnoreBounds.Value;
             }
@@ -85,7 +84,8 @@ namespace BuildingPlus.Patches
             foreach (GameObject g in PlaceableMetadataList.Instance.allBlockPrefabs)
             {
                 Placeable p = g.GetComponent<Placeable>();
-                p.IgnorePlacementRules = false; p.IgnoreBounds = false; 
+                p.IgnorePlacementRules = false;
+                p.IgnoreBounds = false; 
             }
 
         }
