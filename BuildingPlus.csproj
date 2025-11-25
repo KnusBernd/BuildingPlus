@@ -80,8 +80,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuildingPlusConfig.cs" />
     <Compile Include="BuildingPlusPlugin.cs" />
-    <Compile Include="Patches\FreePlayControlPatch.cs" />
+    <Compile Include="Patches\GameControlPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnAcceptDownPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnAcceptUpPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnSprintDownPatch.cs" />

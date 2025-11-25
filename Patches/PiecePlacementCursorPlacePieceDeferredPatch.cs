@@ -89,8 +89,8 @@ namespace BuildingPlus.Patches
             yield return new WaitForSeconds(0.2f); // idk maybe do something different but this work for me.
 
             Selector.Instance.Selection.Drop();
-            yield return null;
-            yield return null;
+            yield return new WaitForSeconds(0.2f); // idk maybe do something different but this work for me.
+
             Selector.Instance.Unlock();
 
            // BuildingPlusPlugin.LogInfo("[Coroutine] Dropped and unlocked selection.");

@@ -26,20 +26,21 @@ namespace BuildingPlus
         {
             Instance = this;
 
+            BuildingPlusConfig.BindConfig(Config);
+
             // Initialize Harmony
             harmony = new Harmony("BuildingPlus");
 
-            FreePlayControlPatch.ApplyPatch(harmony);
+            GameControlPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnAcceptDownPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnAcceptUpPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnSprintDownPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnSprintUpPatch.ApplyPatch(harmony);
             PiecePlacementCursorStartPatch.ApplyPatch(harmony);
             PiecePlacementCursorPlacePieceDeferredPatch.ApplyPatch(harmony);
-
+            
             //PlaceablePlacePatch.ApplyPatch(harmony);
             LogInfo("Plugin loaded.");
-
 
         }
 

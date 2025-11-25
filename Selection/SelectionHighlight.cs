@@ -56,7 +56,7 @@ namespace BuildingPlus.Selection
                 var mat = new Material(Shader.Find("Sprites/Default"));
                 mr.material = mat;
 
-                mat.color = new Color(0.2f, 0.5f, 1f, 0.45f);
+                mat.color = new Color(0.2f, 0.5f, 1f, 0.65f);
                 mr.sortingLayerName = "UI 1";
                 mr.sortingOrder = 13000;
                 mat.SetInt("_ZWrite", 0);
