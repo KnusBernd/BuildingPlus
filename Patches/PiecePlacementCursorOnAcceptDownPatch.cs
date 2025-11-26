@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BuildingPlus.Selection;
 using HarmonyLib;
+using UnityEngine;
 
 namespace BuildingPlus.Patches
 {
@@ -40,11 +41,43 @@ namespace BuildingPlus.Patches
 
         private static void OnAcceptDownPostfix(PiecePlacementCursor __instance)
         {
-            BuildingPlusPlugin.LogInfo("PiecePlacementCursor.OnAcceptDown postfix fired");
             SelectionManager selection = Selector.Instance.Selection;
-            BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
-            BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
+            //BuildingPlusPlugin.LogInfo("postfix accept down ");
+            if (selection.Head != null) 
+            {
+                //BuildingPlusPlugin.LogInfo("postfix cleaning up drop");
+                Selector.Instance.Lock();
+               // BuildingPlusPlugin.Instance.StartCoroutine(WaitForPlaceablesPlaced());
+            }
         }
+
+        private static System.Collections.IEnumerator WaitForPlaceablesPlaced()
+        {
+            // Capture selected set as array (so it doesn’t update mid-wait)
+            SelectionManager selection = Selector.Instance.Selection;
+            var selected = Selector.Instance?.Selection.GetPickedUpPlaceables().ToArray();
+            // BuildingPlusPlugin.LogInfo($"[Coroutine] Waiting for {selected.Length} Placeables to become Placed...");
+
+            // Wait until all selected pieces are placed
+            yield return new UnityEngine.WaitUntil(() =>
+            {
+                foreach (var p in selected)
+                {
+                    if (!p.Placed) return false;
+                }
+                return true;
+            });
+
+            yield return new WaitForSeconds(0.2f);
+            selection.Drop();
+
+            //selection.DeselectAll();
+            yield return new WaitForSeconds(BuildingPlusConfig.SelectionUnlockDelay.Value);
+            Selector.Instance.Unlock();
+
+        }
+
+
 
     }
 }

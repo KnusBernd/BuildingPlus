@@ -69,13 +69,13 @@ namespace BuildingPlus.Selection
             highlight.Show();
 
             // Safely iterate children without modifying list during recursion
-           /* var children = newEntry.ChildPieces.ToList();
+            /* var children = newEntry.ChildPieces.ToList();
 
-            foreach (var child in children)
-            {
-                if (child != null)
-                    Select(child);
-            }*/
+             foreach (var child in children)
+             {
+                 if (child != null)
+                     Select(child);
+             }*/
         }
 
         internal void PickUp(Placeable head)
@@ -117,82 +117,85 @@ namespace BuildingPlus.Selection
                 pickedUpPlaceables.Clear();
                 return;
             }
-            head.DetachAllChildren(true);
-            
+            //head.DetachAllChildren(true);
+            foreach (var place in pickedUpPlaceables)
+            {
+                place.GetComponent<SelectionHighlight>().RefreshBounds();
+            }
+            DetachPieces(head, pickedUpPlaceables);
+
             head = null;
             pickedUpPlaceables.Clear();
-            //BuildingPlusPlugin.LogInfo("[Drop] Completed safely.");
+            BuildingPlusPlugin.LogInfo("[Drop] Completed safely.");
 
-            return;
 
-            //DetachPieces(head, pickedUpPlaceables);
         }
 
-        /* public void DetachPieces(Placeable head, List<Placeable> pieces)
-         {
-             // Safety: no head = nothing to detach.
-             if (head == null || head.gameObject == null)
-             {
-                 return;
-             }
+        public void DetachPieces(Placeable head, List<Placeable> pieces)
+        {
+            // Safety: no head = nothing to detach.
+            if (head == null || head.gameObject == null)
+            {
+                return;
+            }
 
-             // --- SANITIZE ---
+            // --- SANITIZE ---
 
-             pieces.RemoveAll(p =>
-                 p == null ||
-                 p.gameObject == null ||
-                 p == head ||
-                 p.ID == head.ID);
-
-
-             if (pieces.Count == 0)
-             {
-                 return;
-             }
-
-             foreach (var p in pieces.Distinct())
-             {
-                 if (p == null || p.gameObject == null)
-                     continue;
+            pieces.RemoveAll(p =>
+                p == null ||
+                p.gameObject == null ||
+                p == head ||
+                p.ID == head.ID);
 
 
-                 Transform t = p.transform;
+            if (pieces.Count == 0)
+            {
+                return;
+            }
 
-                 // SAFETY CHECK: Transform can be missing if prefab replaced or object was destroyed
-                 if (t == null)
-                 {
-                     continue;
-                 }
+            foreach (var p in pieces.Distinct())
+            {
+                if (p == null || p.gameObject == null)
+                    continue;
 
-                 // LOG CURRENT PARENT
-                 string parentName = t.parent ? t.parent.name : "null";
 
-                 // Record world pose
-                 Vector3 worldPos = t.position;
-                 Quaternion worldRot = t.rotation;
+                Transform t = p.transform;
 
-                 t.SetParent(null, true);
+                // SAFETY CHECK: Transform can be missing if prefab replaced or object was destroyed
+                if (t == null)
+                {
+                    continue;
+                }
 
-                 // Log result of SetParent
-                 parentName = t.parent ? t.parent.name : "null";
+                // LOG CURRENT PARENT
+                string parentName = t.parent ? t.parent.name : "null";
 
-                 t.SetPositionAndRotation(worldPos, worldRot);
+                // Record world pose
+                Vector3 worldPos = t.position;
+                Quaternion worldRot = t.rotation;
 
-                 if (head.ChildPieces.Contains(p))
-                 {
-                     head.ChildPieces.Remove(p);
-                 }
+                t.SetParent(null, true);
 
-                 if (p.ParentPiece == p)
-                 {
-                     p.ParentPiece = null;
-                     p.transform.parent = null;
-                     p.relativeAttachPosition = new Vector3(0f, 0f, 0f);
-                 }
-                 p.Tint();
-             }
+                // Log result of SetParent
+                parentName = t.parent ? t.parent.name : "null";
 
-         } */
+                t.SetPositionAndRotation(worldPos, worldRot);
+
+                if (head.ChildPieces.Contains(p))
+                {
+                    head.ChildPieces.Remove(p);
+                }
+
+                if (p.ParentPiece == head)
+                {
+                    p.ParentPiece = null;
+                    p.transform.parent = null;
+                    p.relativeAttachPosition = new Vector3(0f, 0f, 0f);
+                }
+                p.Tint();
+            }
+
+        }
 
         public List<Placeable> CopySelectedPlaceablesRelativeTo(Placeable newHead)
         {
@@ -211,7 +214,7 @@ namespace BuildingPlus.Selection
             BuildingPlusPlugin.LogInfo("[Postfix] Anchor world rot = " + anchorWorldRot.eulerAngles);
 
             // The reused piece *before* pickup
-            
+
             Vector3 reusedOldPos = newHead.transform.position;
             Quaternion reusedOldRot = newHead.transform.rotation;
 
@@ -254,7 +257,7 @@ namespace BuildingPlus.Selection
                 );
             }
             foreach (var p in new List<Placeable>(selectedPlaceables))
-            { 
+            {
                 Deselect(p);
             }
             return newSel;

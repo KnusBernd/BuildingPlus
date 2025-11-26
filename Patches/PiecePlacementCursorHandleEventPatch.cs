@@ -80,6 +80,8 @@ namespace BuildingPlus.Patches
             Placeable place = cursor.hoveredPiece;
             BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
             BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
+
+            // head
             Placeable placeable = UnityEngine.Object.Instantiate(place.PickableBlock.placeablePrefab);
             placeable.GenerateIDOnPick(placeable.ID, cursor.AssociatedGamePlayer.networkNumber);
             placeable.SetColor(place.CustomColor);
@@ -96,7 +98,7 @@ namespace BuildingPlus.Patches
             selection.GetPickedUpPlaceables().AddRange(newSel);
             BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
             BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
-            selection.DeselectAll();
+            selection.Head = placeable;
             yield return null;
 
         }

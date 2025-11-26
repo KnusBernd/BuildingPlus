@@ -87,10 +87,6 @@ namespace BuildingPlus.Selection
             if (!Input.GetKey(KeyCode.LeftControl) && Cursor.hoveredPiece == null)
                 selection.DeselectAll();
 
-
-            BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
-            BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
-
             return true;
         }
 

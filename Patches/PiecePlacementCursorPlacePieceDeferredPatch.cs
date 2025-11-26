@@ -64,6 +64,7 @@ namespace BuildingPlus.Patches
 
             if (!headPlaced)
                 return;
+            sel.Head = piece;
             Selector.Instance.Lock();
 
             foreach (var place in Selector.Instance?.Selection.GetPickedUpPlaceables())
@@ -89,13 +90,14 @@ namespace BuildingPlus.Patches
                     if (!p.Placed) return false;
                 }
                 return true;
-            }); // 1.93 1.959
+            });
 
-            yield return new WaitForSeconds(0.2f); // idk maybe do something different but this work for me.
+            yield return new WaitForSeconds(0.3f); // idk maybe do something different but this work for me.
 
             Selector.Instance.Selection.Drop();
-            yield return null;
-            yield return null;
+            yield return new WaitForSeconds(BuildingPlusConfig.SelectionUnlockDelay.Value);
+
+            
             Selector.Instance.Unlock();
 
            // BuildingPlusPlugin.LogInfo("[Coroutine] Dropped and unlocked selection.");
