@@ -88,7 +88,7 @@ namespace BuildingPlus.Patches
             placeable.SetInitialDamageLevel(place.damageLevel, true);
             placeable.transform.SetPositionAndRotation(place.transform.position, place.transform.rotation);
 
-            var newSel = selection.CopySelectedPlaceablesRelativeTo(placeable);
+            var newSel = selection.CopySelectedPlaceablesRelativeTo(placeable, place);
             yield return null;
             yield return null;
             yield return null;

@@ -44,7 +44,7 @@ namespace BuildingPlus.Selection
 
                 fillObj.name = "Fill_" + collider.name;
                 fillObj.transform.position = bounds.center;
-                fillObj.transform.localRotation = transform.localRotation;
+                fillObj.transform.rotation = Quaternion.identity; // keep axis-aligned
                 fillObj.transform.localScale = new Vector3(bounds.size.x, bounds.size.y, 1f);
 
                 // Remove collider
@@ -93,7 +93,7 @@ namespace BuildingPlus.Selection
 
         public void Show()
         {
-            RefreshBounds();
+            //RefreshBounds();
             root.SetActive(true);
         }
 

@@ -120,7 +120,7 @@ namespace BuildingPlus.Selection
             //head.DetachAllChildren(true);
             foreach (var place in pickedUpPlaceables)
             {
-                place.GetComponent<SelectionHighlight>().RefreshBounds();
+                //place.GetComponent<SelectionHighlight>().RefreshBounds();
             }
             DetachPieces(head, pickedUpPlaceables);
 
@@ -197,7 +197,7 @@ namespace BuildingPlus.Selection
 
         }
 
-        public List<Placeable> CopySelectedPlaceablesRelativeTo(Placeable newHead)
+        public List<Placeable> CopySelectedPlaceablesRelativeTo(Placeable newHead, Placeable oldHead)
         {
             if (newHead == null || selectedPlaceables.Count == 0)
                 return null;
@@ -222,7 +222,7 @@ namespace BuildingPlus.Selection
             List<Placeable> newSel = new List<Placeable>();
             foreach (var p in selectedPlaceables)
             {
-                if (p.ID == newHead.ID)
+                if (p.ID == oldHead.ID)
                     continue;
 
                 // === Compute original local offset relative to the reused piece ===

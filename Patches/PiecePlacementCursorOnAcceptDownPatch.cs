@@ -47,7 +47,7 @@ namespace BuildingPlus.Patches
             {
                 //BuildingPlusPlugin.LogInfo("postfix cleaning up drop");
                 Selector.Instance.Lock();
-               // BuildingPlusPlugin.Instance.StartCoroutine(WaitForPlaceablesPlaced());
+                BuildingPlusPlugin.Instance.StartCoroutine(WaitForPlaceablesPlaced());
             }
         }
 
