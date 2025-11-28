@@ -42,11 +42,11 @@ namespace BuildingPlus.Patches
 
 
         private static void PlacePieceDeferredPostfix(
-         PiecePlacementCursor __instance,
-         MsgPiecePlaced placeMsg,
-         Placeable piece,
-         bool pieceWasPickedUp
-)
+            PiecePlacementCursor __instance,
+            MsgPiecePlaced placeMsg,
+            Placeable piece,
+            bool pieceWasPickedUp
+            )
         {
            // BuildingPlusPlugin.LogInfo("[Postfix] PlacePieceDeferred called");
 
@@ -66,7 +66,7 @@ namespace BuildingPlus.Patches
                 return;
             sel.Head = piece;
             Selector.Instance.Lock();
-
+            Selector.Instance.Cursor.KeepPiece = false;
             foreach (var place in Selector.Instance?.Selection.GetPickedUpPlaceables())
             {
                 place.Place(__instance.AssociatedGamePlayer.networkNumber);
@@ -97,7 +97,8 @@ namespace BuildingPlus.Patches
             Selector.Instance.Selection.Drop();
             yield return new WaitForSeconds(BuildingPlusConfig.SelectionUnlockDelay.Value);
 
-            
+            Selector.Instance.Cursor.KeepPiece = true;
+
             Selector.Instance.Unlock();
 
            // BuildingPlusPlugin.LogInfo("[Coroutine] Dropped and unlocked selection.");

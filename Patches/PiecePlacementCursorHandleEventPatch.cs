@@ -93,7 +93,6 @@ namespace BuildingPlus.Patches
             yield return null;
             yield return null;
             cursor.SetPiece(placeable, destroyPrevious: true);
-            cursor.KeepPiece = false;
             yield return null;
             selection.GetPickedUpPlaceables().AddRange(newSel);
             BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
