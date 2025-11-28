@@ -13,6 +13,12 @@ In Singleplayer Free Play sessions, the cursor becomes a Multi-Piece Cursor, all
 ## Free Color Choice
 While in the inventory, hold the configurable key (default: Left Shift) and click on a “Pick a Color” block to open a dialog and choose any color for your placeables.
 
+## Faster Placement & Level Loading
+- Placeables are now placed much faster, allowing rapid placement of many pieces at once.
+- Levels load faster due to the optimized placement process.
+
+> **Note:** This feature overlaps with the `LevelLoaderOptimization` mod. If you have BuildingPlus installed, you can safely uninstall `LevelLoaderOptimization`, though the mod still works as a standalone if desired.
+
 ## Configuration Options
 
 ### Placement Restrictions
@@ -29,3 +35,5 @@ While in the inventory, hold the configurable key (default: Left Shift) and clic
 ## Known Issues
 - Quickly picking up a placed selection at different placeables can cause crashes if the detachment or any inner transform progress has not yet finished. (No fix found; the unlock delay is just a workaround.)
 - Sometimes the selector gets locked with an active selection when entering the inventory.
+- Attached Pieces such as Wires and Glue wont get copied.
+- Copying sometimes breaks the Selector logic.

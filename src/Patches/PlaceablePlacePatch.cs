@@ -22,7 +22,6 @@ namespace BuildingPlus.Patches
             {
                 var prefix = AccessTools.Method(typeof(PlaceablePlacePatch), nameof(PlacePrefix));
                 harmony.Patch(method, prefix: new HarmonyMethod(prefix));
-                BuildingPlusPlugin.LogInfo("Patched Placeable.Place successfully");
             }
             else
             {

@@ -15,7 +15,6 @@ namespace BuildingPlus.Patches
             {
                 var prefix = AccessTools.Method(typeof(PiecePlacementCursorClearCurrentPiecePatch), nameof(ClearPrefix));
                 harmony.Patch(method, prefix: new HarmonyMethod(prefix));
-                BuildingPlusPlugin.LogInfo("Patched PiecePlacementCursor.ClearCurrentPiece successfully");
             }
             else
             {

@@ -26,7 +26,6 @@ namespace BuildingPlus.Patches
                 harmony.Patch(method,
                     prefix: new HarmonyMethod(prefix));
 
-                BuildingPlusPlugin.LogInfo("Patched PiecePlacementCursor.handleEvent with postfix successfully");
             }
             else
             {

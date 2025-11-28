@@ -31,8 +31,6 @@ namespace BuildingPlus.Patches
                 harmony.Patch(original,
                    postfix: new HarmonyMethod(postfix)
                 );
-
-                BuildingPlusPlugin.LogInfo("Patched PiecePlacementCursor.PlacePieceDeferred with Prefix + Postfix");
             }
             else
             {

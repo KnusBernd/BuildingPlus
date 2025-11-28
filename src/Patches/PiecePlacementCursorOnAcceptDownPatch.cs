@@ -24,7 +24,6 @@ namespace BuildingPlus.Patches
                     prefix: new HarmonyMethod(prefix),
                     postfix: new HarmonyMethod(postfix));
 
-                BuildingPlusPlugin.LogInfo("Patched PiecePlacementCursor.OnAcceptDown successfully");
             }
             else
             {

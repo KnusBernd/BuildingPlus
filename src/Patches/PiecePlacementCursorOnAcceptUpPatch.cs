@@ -18,7 +18,6 @@ namespace BuildingPlus.Patches
                 var onAcceptUpPrefix = AccessTools.Method(typeof(PiecePlacementCursorOnAcceptUpPatch), nameof(OnAcceptUpPrefix));
                 harmony.Patch(onAcceptUpMethod,
                     prefix: new HarmonyMethod(onAcceptUpPrefix));
-                BuildingPlusPlugin.LogInfo("Patched PiecePlacementCursor.OnAcceptUp with prefix and postfix successfully");
             }
             else
             {

@@ -19,7 +19,6 @@ namespace BuildingPlus.Patches
             {
                 var startPostfix = AccessTools.Method(typeof(PiecePlacementCursorStartPatch), nameof(StartPostfix));
                 harmony.Patch(startMethod, postfix: new HarmonyMethod(startPostfix));
-                BuildingPlusPlugin.LogInfo("Patched PiecePlacementCursor.Start successfully");
             }
             else
             {

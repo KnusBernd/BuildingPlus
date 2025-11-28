@@ -17,7 +17,6 @@ namespace BuildingPlus.Patches
             {
                 var onSprintDownPrefix = AccessTools.Method(typeof(PiecePlacementCursorOnSprintDownPatch), nameof(OnSprintDownPrefix));
                 harmony.Patch(onSprintDownMethod, prefix: new HarmonyMethod(onSprintDownPrefix));
-                BuildingPlusPlugin.LogInfo("Patched PiecePlacementCursor.OnSprintDown successfully");
             }
             else
             {
