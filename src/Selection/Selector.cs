@@ -48,7 +48,7 @@ namespace BuildingPlus.Selection
             {
                 isDraggingBox = true;
                 selectorUI.ShowOutline(true);
-                if (!Input.GetKey(KeyCode.LeftControl))
+                if (!Input.GetKey(BuildingPlusConfig.ControlSelectionKey.Value))
                     selection.DeselectAll();
 
             }
@@ -78,7 +78,7 @@ namespace BuildingPlus.Selection
             startPos.x -= 0.5f;
 
             // If not holding down leftcontrol, clear old selection
-            if (!Input.GetKey(KeyCode.LeftControl) && Cursor.hoveredPiece == null)
+            if (!Input.GetKey(BuildingPlusConfig.ControlSelectionKey.Value) && Cursor.hoveredPiece == null)
                 selection.DeselectAll();
 
             return true;
@@ -127,7 +127,7 @@ namespace BuildingPlus.Selection
                 return true;
 
             // Control key modifies selection
-            if (Input.GetKey(KeyCode.LeftControl))
+            if (Input.GetKey(BuildingPlusConfig.ControlSelectionKey.Value))
                 return HandleSingleSelect(hovered);
 
             // Normal click = pick up hovered
