@@ -1,8 +1,34 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
+﻿# Visual Studio
+.vs/
+*.user
+*.suo
 
-/bin/Debug
-/obj/Debug
-/Properties
-/.vs/BuildingPlus
+# Build results
+bin/
+obj/
+out/
+
+# Backup & cache
+*.tmp
+*.cache
+*.bak
+*.old
+
+# Logs
+*.log
+
+# BepInEx plugins compiled output (your mod dll)
+*.dll
+*.pdb
+
+# OS Files
+Thumbs.db
+ehthumbs.db
+.DS_Store
+
+# Rider
+.idea/
+*.iml
+
+# NuGet
+packages/
