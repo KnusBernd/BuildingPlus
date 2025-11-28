@@ -181,8 +181,8 @@ namespace BuildingPlus.Selection
             Vector3 anchorWorldPos = newHead.transform.position;
             Quaternion anchorWorldRot = newHead.transform.rotation;
 
-            BuildingPlusPlugin.LogInfo("[Postfix] Anchor world pos = " + anchorWorldPos);
-            BuildingPlusPlugin.LogInfo("[Postfix] Anchor world rot = " + anchorWorldRot.eulerAngles);
+            //BuildingPlusPlugin.LogInfo("[Postfix] Anchor world pos = " + anchorWorldPos);
+            //BuildingPlusPlugin.LogInfo("[Postfix] Anchor world rot = " + anchorWorldRot.eulerAngles);
 
 
             Vector3 reusedOldPos = newHead.transform.position;
