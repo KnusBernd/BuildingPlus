@@ -43,7 +43,7 @@ BuildingPlus is a **BepInEx plugin**, so you must have BepInEx installed for *Ul
 
 ### 2. Install BuildingPlus
 
-1. Download the latest release from [this link](https://github.com/KnusBernd/BuildingPlus/releases/).
+1. Download the latest release from [this link](https://github.com/KnusBernd/BuildingPlus/releases/) or build it yourself.
 2. Place the file into: Ultimate Chicken Horse/BepInEx/plugins/
 3. Start the game — BepInEx will load the plugin automatically.
 
