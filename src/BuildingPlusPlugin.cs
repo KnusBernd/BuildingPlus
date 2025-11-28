@@ -45,10 +45,7 @@ namespace BuildingPlus
             PiecePlacementCursorStartPatch.ApplyPatch(harmony);
             PiecePlacementCursorPlacePieceDeferredPatch.ApplyPatch(harmony);
 
-            if (!Chainloader.PluginInfos.ContainsKey("LevelLoadingOptimizer"))
-            {
-                PlaceablePlacePatch.ApplyPatch(harmony);
-            }
+            PlaceablePlacePatch.ApplyPatch(harmony);
             LogInfo("Plugin loaded.");
         }
         void Start()
