@@ -58,11 +58,6 @@ namespace BuildingPlus
             dialog.Draw();
         }
 
-        private void OnColorPicked(Color pickedColor)
-        {
-            throw new NotImplementedException();
-        }
-
         public static void LogInfo(string message)
         {
             LoggerInstance.LogInfo($"[BuildingPlus] {message}");

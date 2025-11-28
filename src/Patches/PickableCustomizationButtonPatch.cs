@@ -35,14 +35,24 @@ namespace BuildingPlus.Patches
             {
                 SpriteRenderer r = __instance.GetComponentInChildren<SpriteRenderer>();
 
-                BuildingPlusPlugin.Instance.Dialog.Show(r.color, (accepted, color) =>
+                BuildingPlusPlugin.Instance.Dialog.Show(r.color, (accepted, color, reset) =>
                 {
                     if (accepted)
                     {
-                        r.color = color;
-                        BuildingPlusConfig.SaveButtonColor(__instance.name, color);
+                        
+                        if (reset) 
+                        {
+                            r.color = InventoryBookPatch.DefaultColors[__instance.name];
+                            BuildingPlusConfig.SaveButtonColor(__instance.name, r.color);
+
+                        }
+                        else 
+                        {
+                            r.color = color;
+                            BuildingPlusConfig.SaveButtonColor(__instance.name, color);
+                        }
                     }
-                });
+                }, InventoryBookPatch.DefaultColors[__instance.name]);
                 return false;
             }
 

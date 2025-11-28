@@ -8,7 +8,7 @@ namespace BuildingPlus.Patches
     internal class InventoryBookPatch
     {
 
-        private static readonly Dictionary<string, Color> DefaultColors = new Dictionary<string, Color>();
+        public static readonly Dictionary<string, Color> DefaultColors = new Dictionary<string, Color>();
 
         public static void ApplyPatch(Harmony harmony)
         {
