@@ -16,10 +16,8 @@ namespace BuildingPlus.Patches
             if (onAcceptUpMethod != null)
             {
                 var onAcceptUpPrefix = AccessTools.Method(typeof(PiecePlacementCursorOnAcceptUpPatch), nameof(OnAcceptUpPrefix));
-                var onAcceptUpPostfix = AccessTools.Method(typeof(PiecePlacementCursorOnAcceptUpPatch), nameof(OnAcceptUpPostfix));
                 harmony.Patch(onAcceptUpMethod,
-                    prefix: new HarmonyMethod(onAcceptUpPrefix),
-                    postfix: new HarmonyMethod(onAcceptUpPostfix));
+                    prefix: new HarmonyMethod(onAcceptUpPrefix));
                 BuildingPlusPlugin.LogInfo("Patched PiecePlacementCursor.OnAcceptUp with prefix and postfix successfully");
             }
             else
@@ -33,10 +31,6 @@ namespace BuildingPlus.Patches
             if (LobbyManager.instance.AllLocal)
                 return Selector.Instance.OnAcceptUp();
             return true;
-        }
-
-        private static void OnAcceptUpPostfix(PiecePlacementCursor __instance)
-        {
         }
     }
 }

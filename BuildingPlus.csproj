@@ -96,6 +96,7 @@
     <Compile Include="BuildingPlusPlugin.cs" />
     <Compile Include="Patches\InventoryBookPatch.cs" />
     <Compile Include="Patches\PickableCustomizationButtonPatch.cs" />
+    <Compile Include="Patches\PiecePlacementCursorClearCurrentPiecePatch.cs" />
     <Compile Include="UI\ColorPickerDialog.cs" />
     <Compile Include="Patches\GameControlPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorHandleEventPatch.cs" />

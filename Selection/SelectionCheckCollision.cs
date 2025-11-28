@@ -88,6 +88,5 @@ namespace BuildingPlus.Selection
             }
             return boxCollider2Ds;
         }
-        
     }
 }

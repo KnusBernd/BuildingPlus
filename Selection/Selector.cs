@@ -8,8 +8,8 @@ namespace BuildingPlus.Selection
     {
         public static Selector Instance;
 
-        private bool isDraggingBox = false;     // true only after threshold is passed
-        private bool pressed = false;           // accept button is being held
+        private bool isDraggingBox = false;     
+        private bool pressed = false;          
         private Vector3 startPos;
         private Vector3 endPos;
         private bool selectionLocked = false;
@@ -22,7 +22,7 @@ namespace BuildingPlus.Selection
 
         private bool sprinting;
 
-        private float dragThreshold = 0.2f; // distance to activate drag mode
+        private float dragThreshold = 0.2f; 
 
         private SelectorUI selectorUI;
 
@@ -30,7 +30,7 @@ namespace BuildingPlus.Selection
         {
             selection = new SelectionManager();
             Instance = this;
-            selectorUI = new SelectorUI(transform); // initialize UI
+            selectorUI = new SelectorUI(transform);
         }
 
         void Update()
@@ -43,9 +43,7 @@ namespace BuildingPlus.Selection
 
             float dist = Vector3.Distance(startPos, cursorPos);
 
-            // ---------------------------------------------------
-            // SWITCH TO DRAG MODE AFTER THRESHOLD IS PASSED
-            // ---------------------------------------------------
+            // drag mode
             if (!isDraggingBox && dist > dragThreshold)
             {
                 isDraggingBox = true;
@@ -55,7 +53,6 @@ namespace BuildingPlus.Selection
 
             }
 
-            // If dragging, update rectangle
             if (isDraggingBox)
             {
                 endPos = cursorPos;
@@ -63,15 +60,12 @@ namespace BuildingPlus.Selection
             }
         }
 
-        // ---------------------------------------------------------------------
-        // ACCEPT DOWN
-        // ---------------------------------------------------------------------
         public bool OnAcceptDown()
         {
             if (!CanPickUp)
                 return false;
 
-            // Can't select while building a piece
+            // Can't select while holding a piece
             if (Cursor.Piece != null)
                 return true;
 
@@ -83,7 +77,7 @@ namespace BuildingPlus.Selection
             startPos = Cursor.transform.position;
             startPos.x -= 0.5f;
 
-            // If not sprinting, clear old selection
+            // If not holding down leftcontrol, clear old selection
             if (!Input.GetKey(KeyCode.LeftControl) && Cursor.hoveredPiece == null)
                 selection.DeselectAll();
 
@@ -105,9 +99,7 @@ namespace BuildingPlus.Selection
             return HandleClickSelection();
         }
 
-        // ---------------------------------------------------------------------
-        // Handles drag selection logic
-        // ---------------------------------------------------------------------
+       
         private bool HandleDragSelection()
         {
             selectorUI.ShowOutline(false);
@@ -126,9 +118,6 @@ namespace BuildingPlus.Selection
             return false;
         }
 
-        // ---------------------------------------------------------------------
-        // Handles click selection logic
-        // ---------------------------------------------------------------------
         private bool HandleClickSelection()
         {
             var hovered = Cursor.hoveredPiece;
@@ -141,10 +130,7 @@ namespace BuildingPlus.Selection
             if (Input.GetKey(KeyCode.LeftControl))
                 return HandleSingleSelect(hovered);
 
-
-            BuildingPlusPlugin.LogInfo( "keep piece: " + Cursor.KeepPiece);
             // Normal click = pick up hovered
-            //
             if (hovered is MultipiecePart) 
             {
                 selection.DeselectAll();
@@ -154,9 +140,6 @@ namespace BuildingPlus.Selection
             return true;
         }
 
-        // ---------------------------------------------------------------------
-        // Handles single-select with Control key
-        // ---------------------------------------------------------------------
         private bool HandleSingleSelect(Placeable hovered)
         {
             if (selection.GetSelectedPlaceables().Contains(hovered))
@@ -167,7 +150,6 @@ namespace BuildingPlus.Selection
             return false;
         }
 
-        // ---------------------------------------------------------------------
         public bool OnSprintDown()
         {
             sprinting = true;

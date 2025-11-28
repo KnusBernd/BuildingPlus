@@ -38,7 +38,5 @@ namespace BuildingPlus.Patches
                 //BuildingPlusPlugin.Instance.StartCoroutine(WaitForPlaceablesPlaced());
             }
         }
-
-      
     }
 }

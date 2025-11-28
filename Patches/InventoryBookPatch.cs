@@ -12,22 +12,6 @@ namespace BuildingPlus.Patches
 
         public static void ApplyPatch(Harmony harmony)
         {
-
-
-
-            var startMethod = AccessTools.Method(typeof(InventoryBook), "Start");
-            if (startMethod != null)
-            {
-                var startPostfix = AccessTools.Method(typeof(InventoryBookPatch), nameof(StartPostfix));
-                harmony.Patch(startMethod, postfix: new HarmonyMethod(startPostfix));
-                BuildingPlusPlugin.LogInfo("Patched InventoryBook.Start successfully");
-            }
-            else
-            {
-                BuildingPlusPlugin.LogError("Failed to find InventoryBook.Start");
-            }
-
-            // Patch UpdatePages(int newPage) - private method
             var updatePagesMethod = AccessTools.Method(typeof(InventoryBook), "UpdatePages");
             if (updatePagesMethod != null)
             {
@@ -40,7 +24,6 @@ namespace BuildingPlus.Patches
                 BuildingPlusPlugin.LogError("Failed to find InventoryBook.UpdatePages");
             }
 
-            // Patch Hide() - public method
             var hideMethod = AccessTools.Method(typeof(InventoryBook), "Hide");
             if (hideMethod != null)
             {
@@ -54,9 +37,6 @@ namespace BuildingPlus.Patches
             }
         }
 
-        // ----------------------------------------------------------------------
-        // Postfix for UpdatePages
-        // ----------------------------------------------------------------------
         private static void UpdatePagesPostfix(InventoryBook __instance, int newPage)
         {
             if (__instance.MainMenuBook || Selector.Instance == null) return;
@@ -68,23 +48,10 @@ namespace BuildingPlus.Patches
             }
         }
 
-        // ----------------------------------------------------------------------
-        // Postfix for Hide
-        // ----------------------------------------------------------------------
         private static void HidePostfix(InventoryBook __instance)
         {
             if (__instance.MainMenuBook || Selector.Instance == null) return;
             BuildingPlusPlugin.Instance.Dialog.Hide(false);
-        }
-
-        private static void StartPostfix(InventoryBook __instance)
-        {
-
-            if (__instance.MainMenuBook || Selector.Instance == null) return;
-            //UpdateColors(__instance);
-
-
-            
         }
 
         private static void UpdateColors(InventoryBook __instance)
@@ -126,9 +93,6 @@ namespace BuildingPlus.Patches
                     BuildingPlusPlugin.LogWarning($"UpdateColors: Child at index {i} does not have a PickableCustomizationButton component.");
                 }
             }
-
-            BuildingPlusPlugin.LogInfo($"UpdateColors: buttons updated");
         }
-
     }
 }

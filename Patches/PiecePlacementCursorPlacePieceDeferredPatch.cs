@@ -46,7 +46,7 @@ namespace BuildingPlus.Patches
             MsgPiecePlaced placeMsg,
             Placeable piece,
             bool pieceWasPickedUp
-            )
+        )
         {
            // BuildingPlusPlugin.LogInfo("[Postfix] PlacePieceDeferred called");
 
@@ -72,7 +72,7 @@ namespace BuildingPlus.Patches
                 place.Place(__instance.AssociatedGamePlayer.networkNumber);
             }
             BuildingPlusPlugin.Instance.StartCoroutine(WaitForPlaceablesPlaced());
-            BuildingPlusPlugin.LogInfo("Dropping Selection");
+            //BuildingPlusPlugin.LogInfo("Dropping Selection");
 
         }
 
@@ -82,7 +82,6 @@ namespace BuildingPlus.Patches
             var selected = Selector.Instance?.Selection.GetPickedUpPlaceables().ToArray();
             // BuildingPlusPlugin.LogInfo($"[Coroutine] Waiting for {selected.Length} Placeables to become Placed...");
 
-            // Wait until all selected pieces are placed
             yield return new UnityEngine.WaitUntil(() =>
             {
                 foreach (var p in selected)
@@ -101,7 +100,6 @@ namespace BuildingPlus.Patches
 
             Selector.Instance.Unlock();
 
-           // BuildingPlusPlugin.LogInfo("[Coroutine] Dropped and unlocked selection.");
         }
     }
 }

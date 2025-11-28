@@ -29,7 +29,7 @@ namespace BuildingPlus.Patches
         {
             if (LobbyManager.instance.AllLocal)
                 return Selector.Instance.OnSprintUp();
-            else return true;
+            return true;
         }
     }
 }

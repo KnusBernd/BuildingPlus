@@ -41,10 +41,7 @@ namespace BuildingPlus.Patches
                     {
                         r.color = color;
                         BuildingPlusConfig.SaveButtonColor(__instance.name, color);
-                        Debug.Log("Picked color: " + color);
                     }
-                    else
-                        Debug.Log("User canceled");
                 });
                 return false;
             }

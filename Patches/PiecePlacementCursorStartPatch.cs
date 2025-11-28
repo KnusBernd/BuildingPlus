@@ -56,9 +56,8 @@ namespace BuildingPlus.Patches
                 }
 
                 Selector.Instance.Cursor = cursor;
-                BuildingPlusPlugin.LogInfo("Cursor found of player " + cursor.AssociatedGamePlayer.playerName);
+                //BuildingPlusPlugin.LogInfo("Cursor found of player " + cursor.AssociatedGamePlayer.playerName);
             }
         }
-
     }
 }

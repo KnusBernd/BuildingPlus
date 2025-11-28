@@ -89,22 +89,22 @@ namespace BuildingPlus.UI
         {
             GUILayout.BeginVertical();
 
-            // --- 1. COLOR PREVIEW FIELD ---
+            // COLOR PREVIEW FIELD
             DrawColorPreview();
 
             GUILayout.Space(10);
 
-            // --- 2. HEX FIELD ---
+            // HEX FIELD 
             DrawHexField();
 
             GUILayout.Space(10);
 
-            // --- 3. RGB SLIDERS ---
+            // RGB SLIDERS
             DrawRgbSliders();
 
             GUILayout.Space(10);
 
-            // --- 4. OK/CANCEL BUTTONS ---
+            // OK/CANCEL BUTTONS 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("OK", GUILayout.Height(28)))
                 Hide(true);
@@ -190,7 +190,6 @@ namespace BuildingPlus.UI
             GUILayout.EndVertical();
         }
 
-        // Helper to validate hex string
         private bool IsValidHex(string hex)
         {
             if (hex.StartsWith("#")) hex = hex.Substring(1);
@@ -211,7 +210,6 @@ namespace BuildingPlus.UI
             // RED Slider
             GUILayout.BeginHorizontal();
             GUILayout.Label("R", GUILayout.Width(20));
-            // Multiplied by 255f for 0-255 range for the slider
             newR = GUILayout.HorizontalSlider(currentColor.r * 255f, 0f, 255f);
             GUILayout.Label(Mathf.RoundToInt(newR).ToString(), GUILayout.Width(30));
             GUILayout.EndHorizontal();
@@ -260,8 +258,6 @@ namespace BuildingPlus.UI
             }
         }
 
-        // --- Helper Methods for Color/Hex Conversion ---
-
         /// <summary>Converts a Unity Color (RGB, 0-1) to an RRGGBB hex string.</summary>
         private string ColorToHex(Color color)
         {
@@ -296,12 +292,11 @@ namespace BuildingPlus.UI
                 byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
                 byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
 
-                // Create and return the Color, converting bytes (0-255) to floats (0-1)
-                return new Color32(r, g, b, 255); // Color32 automatically converts to Color
+                return new Color32(r, g, b, 255);
             }
             catch (Exception)
             {
-                return currentColor; // Return current color on parsing error
+                return currentColor; 
             }
         }
     }

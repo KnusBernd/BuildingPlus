@@ -39,7 +39,7 @@ namespace BuildingPlus.Patches
 
             if (Selector.Instance == null)
             {
-                return true; // call method
+                return true; 
             }
 
             if (e.GetType() != typeof(PickBlockEvent))
@@ -51,9 +51,7 @@ namespace BuildingPlus.Patches
             int cursorPlayer = cursor.AssociatedGamePlayer.networkNumber;
 
 
-            BuildingPlusPlugin.LogInfo(
-                $"PickBlockEvent received. PlayerNumber={pickBlockEvent.PlayerNumber}, CursorPlayer={cursorPlayer}"
-            );
+            //BuildingPlusPlugin.LogInfo( $"PickBlockEvent received. PlayerNumber={pickBlockEvent.PlayerNumber}, CursorPlayer={cursorPlayer}");
 
             var selection = Selector.Instance.Selection;
 
@@ -78,10 +76,10 @@ namespace BuildingPlus.Patches
             var cursor = Selector.Instance.Cursor;
             var selection = Selector.Instance.Selection;
             Placeable place = cursor.hoveredPiece;
-            BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
-            BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
+            //BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
+            //BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
 
-            // head
+            // new head
             Placeable placeable = UnityEngine.Object.Instantiate(place.PickableBlock.placeablePrefab);
             placeable.GenerateIDOnPick(placeable.ID, cursor.AssociatedGamePlayer.networkNumber);
             placeable.SetColor(place.CustomColor);
@@ -95,8 +93,8 @@ namespace BuildingPlus.Patches
             cursor.SetPiece(placeable, destroyPrevious: true);
             yield return null;
             selection.GetPickedUpPlaceables().AddRange(newSel);
-            BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
-            BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
+            //BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
+            //BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
             selection.Head = placeable;
             yield return null;
 
