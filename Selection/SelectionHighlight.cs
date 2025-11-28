@@ -44,7 +44,7 @@ namespace BuildingPlus.Selection
 
                 fillObj.name = "Fill_" + collider.name;
                 fillObj.transform.position = bounds.center;
-                fillObj.transform.localRotation = transform.localRotation;
+                fillObj.transform.rotation = Quaternion.identity; // keep axis-aligned
                 fillObj.transform.localScale = new Vector3(bounds.size.x, bounds.size.y, 1f);
 
                 // Remove collider
@@ -68,29 +68,32 @@ namespace BuildingPlus.Selection
 
         public void RefreshBounds()
         {
-            if (root == null) return;
+            if (root == null)
+                CreateVisuals();
 
+            var colliders = SelectionCheckCollision.GetCollidersOf(placeable, "SolidCollider");
+            if (colliders.Count == 0)
+                colliders = SelectionCheckCollision.GetCollidersOf(placeable, "PlacementCollider");
+
+            int i = 0;
             foreach (Transform child in root.transform)
             {
+                if (i >= colliders.Count) break;
+
                 var quad = child.gameObject;
-
-                var colliders = SelectionCheckCollision.GetCollidersOf(placeable, "SolidCollider");
-                if (colliders.Count == 0)
-                    colliders = SelectionCheckCollision.GetCollidersOf(placeable, "PlacementCollider");
-
-                if (colliders.Count == 0)
-                    continue;
-
-                var b = colliders[0].bounds;
+                var b = colliders[i].bounds;
 
                 quad.transform.position = b.center + new Vector3(0, 0, -0.01f);
-
                 quad.transform.localScale = new Vector3(b.size.x, b.size.y, 1f);
+
+                i++;
             }
         }
 
+
         public void Show()
         {
+            //RefreshBounds();
             root.SetActive(true);
         }
 

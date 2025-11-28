@@ -98,6 +98,7 @@
     <Compile Include="Patches\PickableCustomizationButtonPatch.cs" />
     <Compile Include="UI\ColorPickerDialog.cs" />
     <Compile Include="Patches\GameControlPatch.cs" />
+    <Compile Include="Patches\PiecePlacementCursorHandleEventPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnAcceptDownPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnAcceptUpPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorOnSprintDownPatch.cs" />

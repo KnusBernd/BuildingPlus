@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GameEvent;
 using UnityEngine;
 
 namespace BuildingPlus.Selection
@@ -13,8 +14,11 @@ namespace BuildingPlus.Selection
         public List<Placeable> GetPickedUpPlaceables() => pickedUpPlaceables;
 
         public List<Placeable> GetSelectedPlaceables() => selectedPlaceables;
-        public Placeable Head { get { return head; } }
-
+        public Placeable Head
+        {
+            get { return head; }
+            set { head = value; }
+        }
         // --------------------------------------------------
         //  Deselect ALL – SAFE VERSION (no modified-while-enum)
         // --------------------------------------------------
@@ -25,6 +29,7 @@ namespace BuildingPlus.Selection
 
             foreach (var placeable in copy)
                 Deselect(placeable);
+            selectedPlaceables.Clear();
         }
 
         // --------------------------------------------------
@@ -64,13 +69,13 @@ namespace BuildingPlus.Selection
             highlight.Show();
 
             // Safely iterate children without modifying list during recursion
-           /* var children = newEntry.ChildPieces.ToList();
+            /* var children = newEntry.ChildPieces.ToList();
 
-            foreach (var child in children)
-            {
-                if (child != null)
-                    Select(child);
-            }*/
+             foreach (var child in children)
+             {
+                 if (child != null)
+                     Select(child);
+             }*/
         }
 
         internal void PickUp(Placeable head)
@@ -112,19 +117,21 @@ namespace BuildingPlus.Selection
                 pickedUpPlaceables.Clear();
                 return;
             }
+            //head.DetachAllChildren(true);
+            foreach (var place in pickedUpPlaceables)
+            {
+                //place.GetComponent<SelectionHighlight>().RefreshBounds();
+            }
+            DetachPieces(head, pickedUpPlaceables);
 
-            head.DetachAllChildren(true);
-            
             head = null;
             pickedUpPlaceables.Clear();
-            //BuildingPlusPlugin.LogInfo("[Drop] Completed safely.");
+            BuildingPlusPlugin.LogInfo("[Drop] Completed safely.");
 
-            return;
 
-            //DetachPieces(head, pickedUpPlaceables);
         }
 
-       /* public void DetachPieces(Placeable head, List<Placeable> pieces)
+        public void DetachPieces(Placeable head, List<Placeable> pieces)
         {
             // Safety: no head = nothing to detach.
             if (head == null || head.gameObject == null)
@@ -173,13 +180,13 @@ namespace BuildingPlus.Selection
                 parentName = t.parent ? t.parent.name : "null";
 
                 t.SetPositionAndRotation(worldPos, worldRot);
-              
+
                 if (head.ChildPieces.Contains(p))
                 {
                     head.ChildPieces.Remove(p);
                 }
 
-                if (p.ParentPiece == p)
+                if (p.ParentPiece == head)
                 {
                     p.ParentPiece = null;
                     p.transform.parent = null;
@@ -188,7 +195,72 @@ namespace BuildingPlus.Selection
                 p.Tint();
             }
 
-        } */
+        }
 
+        public List<Placeable> CopySelectedPlaceablesRelativeTo(Placeable newHead, Placeable oldHead)
+        {
+            if (newHead == null || selectedPlaceables.Count == 0)
+                return null;
+
+            var cursor = Selector.Instance.Cursor;
+            int cursorPlayer = cursor.AssociatedGamePlayer.networkNumber;
+            // The piece the cursor is NOW holding (after pickup)
+
+            // ✔ Anchor position and rotation are the REAL world transform of the held piece
+            Vector3 anchorWorldPos = newHead.transform.position;
+            Quaternion anchorWorldRot = newHead.transform.rotation;
+
+            BuildingPlusPlugin.LogInfo("[Postfix] Anchor world pos = " + anchorWorldPos);
+            BuildingPlusPlugin.LogInfo("[Postfix] Anchor world rot = " + anchorWorldRot.eulerAngles);
+
+            // The reused piece *before* pickup
+
+            Vector3 reusedOldPos = newHead.transform.position;
+            Quaternion reusedOldRot = newHead.transform.rotation;
+
+            // Set the new HEAD
+            List<Placeable> newSel = new List<Placeable>();
+            foreach (var p in selectedPlaceables)
+            {
+                if (p.ID == oldHead.ID)
+                    continue;
+
+                // === Compute original local offset relative to the reused piece ===
+                Vector3 localOffsetPos =
+                    Quaternion.Inverse(reusedOldRot) * (p.transform.position - reusedOldPos);
+
+                Quaternion localOffsetRot =
+                    Quaternion.Inverse(reusedOldRot) * p.transform.rotation;
+
+                // === Apply that offset to the new anchor (held piece) ===
+                Vector3 newWorldPos = anchorWorldPos + (anchorWorldRot * localOffsetPos);
+                Quaternion newWorldRot = anchorWorldRot * localOffsetRot;
+
+                // Instantiate new piece
+                Placeable placeable = UnityEngine.Object.Instantiate(
+                    p.PickableBlock.placeablePrefab,
+                    newWorldPos,
+                    newWorldRot
+                );
+
+                placeable.GenerateIDOnPick(placeable.ID, cursorPlayer);
+                placeable.SetColor(p.CustomColor);
+                placeable.SetInitialDamageLevel(p.damageLevel, allowDamageReset: true);
+                placeable.transform.SetPositionAndRotation(newWorldPos, newWorldRot);
+                placeable.Tint();
+                newSel.Add(placeable);
+                // Attach
+                placeable.transform.SetParent(newHead.transform, worldPositionStays: true);
+
+                BuildingPlusPlugin.LogInfo(
+                    $"[Postfix] Attached new piece {placeable.name} at {newWorldPos} rot {newWorldRot.eulerAngles}"
+                );
+            }
+            foreach (var p in new List<Placeable>(selectedPlaceables))
+            {
+                Deselect(p);
+            }
+            return newSel;
+        }
     }
 }

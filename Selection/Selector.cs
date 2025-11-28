@@ -75,7 +75,6 @@ namespace BuildingPlus.Selection
             if (Cursor.Piece != null)
                 return true;
 
-   
 
             pressed = true;
             isDraggingBox = false;
@@ -142,6 +141,8 @@ namespace BuildingPlus.Selection
             if (Input.GetKey(KeyCode.LeftControl))
                 return HandleSingleSelect(hovered);
 
+
+            BuildingPlusPlugin.LogInfo( "keep piece: " + Cursor.KeepPiece);
             // Normal click = pick up hovered
             //
             if (hovered is MultipiecePart) 
