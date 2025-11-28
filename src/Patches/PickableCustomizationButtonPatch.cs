@@ -39,12 +39,10 @@ namespace BuildingPlus.Patches
                 {
                     if (accepted)
                     {
-                        
                         if (reset) 
                         {
                             r.color = InventoryBookPatch.DefaultColors[__instance.name];
                             BuildingPlusConfig.SaveButtonColor(__instance.name, r.color);
-
                         }
                         else 
                         {

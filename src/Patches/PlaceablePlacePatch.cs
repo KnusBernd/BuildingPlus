@@ -32,10 +32,9 @@ namespace BuildingPlus.Patches
 
         public static void PlacePrefix(Placeable __instance, int playerNumber, bool sendEvent, bool force)
         {
-            if (LobbyManager.instance.AllLocal)
+            if (__instance != null && __instance.UsefulName != null)
             {
-                if (__instance == null || Selector.Instance == null || Selector.Instance.Selection.Head == null || Selector.Instance.Selection.Head.ID != __instance.ID) return;
-                //BuildingPlusPlugin.Instance.StartCoroutine(WaitForPlaceablesPlaced());
+                Debug.unityLogger.logEnabled = false;
             }
         }
     }
