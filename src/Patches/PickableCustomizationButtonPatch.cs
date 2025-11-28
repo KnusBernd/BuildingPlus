@@ -31,7 +31,7 @@ namespace BuildingPlus.Patches
 
         public static bool OnAcceptPrefix(PickableCustomizationButton __instance, PickCursor pickCursor)
         {
-            if (Input.GetKey(KeyCode.LeftShift) && __instance.customizationType == CustomizationType.BlockColors) 
+            if (Input.GetKey(BuildingPlusConfig.ColorPickDialogKey.Value) && __instance.customizationType == CustomizationType.BlockColors) 
             {
                 SpriteRenderer r = __instance.GetComponentInChildren<SpriteRenderer>();
 
