@@ -5,11 +5,11 @@ namespace BuildingPlus.UI
 {
     public class ColorPickerDialog
     {
-        private Rect windowRect = new Rect(400, 200, 350, 300); // Increased height for hex field
+        private Rect windowRect = new Rect(400, 200, 350, 300); 
         private bool visible = false;
 
         private Color currentColor;
-        private string hexColorString; // New field for hex input
+        private string hexColorString; 
 
         private Action<bool, Color> callback;
 
@@ -35,7 +35,6 @@ namespace BuildingPlus.UI
 
             UnityEngine.Cursor.visible = true;
             UnityEngine.Cursor.lockState = CursorLockMode.None;
-            UnityEngine.Debug.Log("ColorPickerDialog.Show() CALLED");
         }
         private void InitializeColorSwatch()
         {

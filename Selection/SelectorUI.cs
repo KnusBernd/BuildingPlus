@@ -17,14 +17,12 @@ namespace BuildingPlus.Selection
             CreateSelectionVisuals();
         }
 
-        // Show or hide the selection outline
         public void ShowOutline(bool visible)
         {
             if (selectionOutlineRoot != null)
                 selectionOutlineRoot.SetActive(visible);
         }
 
-        // Update rectangle visuals based on start and end positions
         public void UpdateBox(Vector3 a, Vector3 b)
         {
             Vector3 min = Vector3.Min(a, b);
@@ -43,9 +41,6 @@ namespace BuildingPlus.Selection
             selectionFill.transform.localScale = new Vector3(max.x - min.x, max.y - min.y, 1f);
         }
 
-        // ---------------------------------------------------------
-        // Private methods for creating visuals
-        // ---------------------------------------------------------
         private void CreateSelectionVisuals()
         {
             selectionOutlineRoot = new GameObject("SelectionOutlineRoot");

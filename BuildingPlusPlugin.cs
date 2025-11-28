@@ -31,7 +31,6 @@ namespace BuildingPlus
 
             BuildingPlusConfig.BindConfig(Config);
 
-            // Initialize Harmony
             harmony = new Harmony("BuildingPlus");
 
             GameControlPatch.ApplyPatch(harmony);
@@ -48,7 +47,6 @@ namespace BuildingPlus
             
             //PlaceablePlacePatch.ApplyPatch(harmony);
             LogInfo("Plugin loaded.");
-
         }
         void Start()
         {
@@ -79,6 +77,5 @@ namespace BuildingPlus
         {
             LoggerInstance.LogError($"[BuildingPlus] {message}");
         }
-
     }
 }
