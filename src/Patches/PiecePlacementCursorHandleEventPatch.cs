@@ -16,13 +16,11 @@ namespace BuildingPlus.Patches
 
         public static void ApplyPatch(Harmony harmony)
         {
-            // Get the original method
             var method = AccessTools.Method(typeof(PiecePlacementCursor), "handleEvent", new Type[] { typeof(global::GameEvent.GameEvent) });
             if (method != null)
             {
                 var prefix = AccessTools.Method(typeof(PiecePlacementCursorHandleEventPatch), nameof(HandleEventPrefix));
 
-                // Apply only postfix; prefix is no longer needed
                 harmony.Patch(method,
                     prefix: new HarmonyMethod(prefix));
 
@@ -35,13 +33,17 @@ namespace BuildingPlus.Patches
 
         private static bool HandleEventPrefix(PiecePlacementCursor __instance, global::GameEvent.GameEvent e)
         {
-
-            if (Selector.Instance == null)
+            if (e.GetType() != typeof(PickBlockEvent))
             {
-                return true; 
+                return true;
             }
 
-            if (e.GetType() != typeof(PickBlockEvent))
+            if (LobbyManager.instance.GetLobbyPlayers().Count() > 1)
+            {
+                return true;
+            }
+
+            if (Selector.Instance == null)
             {
                 return true;
             }
