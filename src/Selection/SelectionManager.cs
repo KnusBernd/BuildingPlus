@@ -224,10 +224,6 @@ namespace BuildingPlus.Selection
 
                 //BuildingPlusPlugin.LogInfo($"[Postfix] Attached new piece {placeable.name} at {newWorldPos} rot {newWorldRot.eulerAngles}");
             }
-            foreach (var p in new List<Placeable>(selectedPlaceables))
-            {
-                Deselect(p);
-            }
             return newSel;
         }
     }

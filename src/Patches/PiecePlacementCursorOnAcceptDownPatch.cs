@@ -66,7 +66,7 @@ namespace BuildingPlus.Patches
                 return true;
             });
 
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.3f);
             selection.Drop();
 
             yield return new WaitForSeconds(BuildingPlusConfig.SelectionUnlockDelay.Value);
