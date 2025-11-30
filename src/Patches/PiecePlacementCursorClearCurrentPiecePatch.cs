@@ -14,7 +14,12 @@ namespace BuildingPlus.Patches
             if (method != null)
             {
                 var prefix = AccessTools.Method(typeof(PiecePlacementCursorClearCurrentPiecePatch), nameof(ClearPrefix));
-                harmony.Patch(method, prefix: new HarmonyMethod(prefix));
+                var postfix = AccessTools.Method(typeof(PiecePlacementCursorClearCurrentPiecePatch), nameof(ClearPostfix));
+
+                harmony.Patch(method,
+                    prefix: new HarmonyMethod(prefix),
+                    postfix: new HarmonyMethod(postfix)
+                );
             }
             else
             {
@@ -27,6 +32,21 @@ namespace BuildingPlus.Patches
             if (LobbyManager.instance.AllLocal && Selector.Instance != null)
             {
                 Selector.Instance.Unlock();
+            }
+        }
+
+        public static void ClearPostfix(PiecePlacementCursor __instance)
+        {
+            if (LobbyManager.instance.AllLocal && Selector.Instance != null)
+            {
+                if (Selector.Instance.Selection.GetSelectedPlaceables().Count == 0) 
+                { 
+                    foreach (var p in Selector.Instance.Selection.GetOldSelectedPlaceables()) 
+                    { 
+                        Selector.Instance.Selection.Select(p);
+                    }
+                    Selector.Instance.Selection.GetOldSelectedPlaceables().Clear();
+                }
             }
         }
     }
