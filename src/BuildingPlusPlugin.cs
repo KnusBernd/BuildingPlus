@@ -37,6 +37,7 @@ namespace BuildingPlus
             InventoryBookPatch.ApplyPatch(harmony);
             PickableCustomizationButtonPatch.ApplyPatch(harmony);
             PiecePlacementCursorClearCurrentPiecePatch.ApplyPatch(harmony);
+            PiecePlacementCursorFixedUpdatePatch.ApplyPatch(harmony);
             PiecePlacementCursorHandleEventPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnAcceptDownPatch.ApplyPatch(harmony);
             PiecePlacementCursorOnAcceptUpPatch.ApplyPatch(harmony);

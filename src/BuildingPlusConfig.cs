@@ -16,6 +16,7 @@ namespace BuildingPlus
         public static ConfigEntry<float> SelectionUnlockDelay { get; private set; }
         public static ConfigEntry<KeyCode> ControlSelectionKey { get; private set; }
         public static ConfigEntry<KeyCode> ColorPickDialogKey { get; private set; }
+        public static ConfigEntry<KeyCode> FreePlacementKey { get; private set; }
 
         private static readonly Dictionary<string, ConfigEntry<string>> ButtonColorEntries = new Dictionary<string, ConfigEntry<string>>();
 
@@ -54,6 +55,13 @@ namespace BuildingPlus
                 "ColorPickDialogKey",
                 KeyCode.LeftShift,
                 "Press this key to open the color pick dialog for the selected placeable."
+            );
+
+            FreePlacementKey = config.Bind(
+                "BuildingPlus",
+                "FreePlacementKey",
+                KeyCode.LeftAlt,
+                "Hold this key to freely move placeables without grid snapping."
             );
         }
 

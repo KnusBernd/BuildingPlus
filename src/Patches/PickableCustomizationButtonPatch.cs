@@ -20,8 +20,6 @@ namespace BuildingPlus.Patches
                                                 nameof(OnAcceptPrefix));
 
                 harmony.Patch(original, prefix: new HarmonyMethod(prefix));
-
-                BuildingPlusPlugin.LogInfo("Patched PickableCustomizationButton.OnAccept successfully");
             }
             else
             {

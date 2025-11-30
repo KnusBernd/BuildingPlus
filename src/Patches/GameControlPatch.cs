@@ -22,7 +22,6 @@ namespace BuildingPlus.Patches
 
             var postfix = AccessTools.Method(typeof(GameControlPatch), nameof(SetupStartPostfix));
             harmony.Patch(original, postfix: new HarmonyMethod(postfix));
-            BuildingPlusPlugin.LogInfo("Patched GameControl.SetupStart successfully");
 
             var onDestroy = AccessTools.Method(typeof(GameControl), "OnDestroy");
 
@@ -34,9 +33,6 @@ namespace BuildingPlus.Patches
 
             postfix = AccessTools.Method(typeof(GameControlPatch), nameof(OnDestroyPostfix));
             harmony.Patch(onDestroy, postfix: new HarmonyMethod(postfix));
-
-            BuildingPlusPlugin.LogInfo("Patched GameControl.OnDestroy successfully");
-
         }
 
         public static void SetupStartPostfix(GameControl __instance, GameState.GameMode mode)

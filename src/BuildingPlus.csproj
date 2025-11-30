@@ -19,7 +19,7 @@
     <Optimize>false</Optimize>
     <OutputPath>..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-	<IntermediateOutputPath>..\obj\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>..\obj\Debug\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -28,7 +28,7 @@
     <Optimize>true</Optimize>
     <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-	<IntermediateOutputPath>..\obj\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>..\obj\Debug\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="BuildingPlusConfig.cs" />
     <Compile Include="BuildingPlusPlugin.cs" />
+    <Compile Include="Patches\PiecePlacementCursorFixedUpdatePatch.cs" />
     <Compile Include="Patches\InventoryBookPatch.cs" />
     <Compile Include="Patches\PickableCustomizationButtonPatch.cs" />
     <Compile Include="Patches\PiecePlacementCursorClearCurrentPiecePatch.cs" />

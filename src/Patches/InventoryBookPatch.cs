@@ -17,7 +17,6 @@ namespace BuildingPlus.Patches
             {
                 var updatePagesPostfix = AccessTools.Method(typeof(InventoryBookPatch), nameof(UpdatePagesPostfix));
                 harmony.Patch(updatePagesMethod, postfix: new HarmonyMethod(updatePagesPostfix));
-                BuildingPlusPlugin.LogInfo("Patched InventoryBook.UpdatePages successfully");
             }
             else
             {
@@ -29,7 +28,6 @@ namespace BuildingPlus.Patches
             {
                 var hidePostfix = AccessTools.Method(typeof(InventoryBookPatch), nameof(HidePostfix));
                 harmony.Patch(hideMethod, postfix: new HarmonyMethod(hidePostfix));
-                BuildingPlusPlugin.LogInfo("Patched InventoryBook.Hide successfully");
             }
             else
             {
