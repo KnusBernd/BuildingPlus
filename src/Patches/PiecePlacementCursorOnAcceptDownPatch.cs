@@ -56,7 +56,6 @@ namespace BuildingPlus.Patches
             SelectionManager selection = Selector.Instance.Selection;
             var selected = Selector.Instance?.Selection.GetPickedUpPlaceables().ToArray();
             // BuildingPlusPlugin.LogInfo($"[Coroutine] Waiting for {selected.Length} Placeables to become Placed...");
-
             yield return new UnityEngine.WaitUntil(() =>
             {
                 foreach (var p in selected)
@@ -67,11 +66,15 @@ namespace BuildingPlus.Patches
             });
 
             yield return new WaitForSeconds(0.3f);
+            List<Placeable> placed = new List<Placeable>(selected);
+            placed.Add(selection.Head);
             selection.Drop();
-
+            foreach (var p in placed)
+            {
+                selection.Select(p);
+            }
             yield return new WaitForSeconds(BuildingPlusConfig.SelectionUnlockDelay.Value);
             Selector.Instance.Unlock();
-
         }
     }
 }

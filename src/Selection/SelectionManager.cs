@@ -8,12 +8,16 @@ namespace BuildingPlus.Selection
 {
     public class SelectionManager
     {
+        private readonly List<Placeable> oldSelectedPlaceables = new List<Placeable>(); // used when copying
         private readonly List<Placeable> selectedPlaceables = new List<Placeable>();
         private readonly List<Placeable> pickedUpPlaceables = new List<Placeable>();
         private Placeable head;
         public List<Placeable> GetPickedUpPlaceables() => pickedUpPlaceables;
 
         public List<Placeable> GetSelectedPlaceables() => selectedPlaceables;
+
+        public List<Placeable> GetOldSelectedPlaceables() => oldSelectedPlaceables;
+
         public Placeable Head
         {
             get { return head; }
@@ -135,7 +139,6 @@ namespace BuildingPlus.Selection
             {
                 if (p == null || p.gameObject == null)
                     continue;
-
 
                 Transform t = p.transform;
 

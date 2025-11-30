@@ -97,8 +97,11 @@ namespace BuildingPlus.Patches
             //BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
             //BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
             selection.Head = placeable;
-            yield return null;
+            selection.GetOldSelectedPlaceables().Clear();
+            selection.GetOldSelectedPlaceables().AddRange(selection.GetSelectedPlaceables());
+            yield return new WaitForSeconds(0.1f);
 
+            selection.DeselectAll();
         }
     }
 }
