@@ -142,6 +142,8 @@ namespace BuildingPlus.Selection
 
         private bool HandleSingleSelect(Placeable hovered)
         {
+            if (SelectionCheckCollision.IgnoringPlacements.Contains(hovered.name)) return false;
+
             if (selection.GetSelectedPlaceables().Contains(hovered))
                 selection.Deselect(hovered);
             else

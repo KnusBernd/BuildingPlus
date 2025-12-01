@@ -10,7 +10,7 @@ namespace BuildingPlus.Selection
 {
     internal class SelectionCheckCollision
     {
-        static List<string> ingoring = new List<string>() { "Ceiling", "LeftWall", "RightWall", "DeathPit" };
+        public static List<string> IgnoringPlacements = new List<string>() { "Ceiling", "LeftWall", "RightWall", "DeathPit" };
 
         internal static HashSet<Placeable> checkCollision(Bounds bounds) 
         {
@@ -18,7 +18,7 @@ namespace BuildingPlus.Selection
 
             foreach (Placeable p in Placeable.AllPlaceables) 
             {
-                if (ingoring.Contains(p.name)) continue;
+                if (IgnoringPlacements.Contains(p.name)) continue;
 
                 if (p.name.Contains("SpinningDeath"))
                 {

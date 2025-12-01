@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class CameraController2D : MonoBehaviour
 {
-    public float dragSpeed = 0.01f;
+    public float dragSpeed = 0.0125f;
     public float edgeScrollSpeed = 25f;
     public float edgeSize = 35f;
 
@@ -90,25 +90,19 @@ public class CameraController2D : MonoBehaviour
         transform.position += move;
     }
 
-
-
-
     void HandleZoom()
     {
+        if (Selector.Instance != null && Selector.Instance.Cursor.Piece != null) return;
         // Mouse scroll wheel input
         float scroll = Input.GetAxis("Mouse ScrollWheel");
-        cam.fieldOfView -= scroll * zoomSensitivity * 100f * Time.deltaTime; // multiplied to make scroll feel responsive
 
         // Keyboard input
-        if (Input.GetKey(KeyCode.I))
-            cam.fieldOfView -= zoomSensitivity * Time.deltaTime;
-        if (Input.GetKey(KeyCode.K))
-            cam.fieldOfView += zoomSensitivity * Time.deltaTime;
+        if (Input.GetKey(KeyCode.LeftAlt))
+            cam.fieldOfView -= scroll * zoomSensitivity * 100f * Time.deltaTime; // multiplied to make scroll feel responsive
 
         // Clamp to min/max FOV
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minFov, maxFov);
     }
-
 
     void HandleDoubleMMBClick()
     {
