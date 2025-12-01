@@ -7,6 +7,7 @@ using BuildingPlus.Camera;
 using BuildingPlus.Selection;
 using HarmonyLib;
 using UnityEngine;
+using UnityEngine.Networking.NetworkSystem;
 
 namespace BuildingPlus.Patches
 {
@@ -65,7 +66,17 @@ namespace BuildingPlus.Patches
                 p.IgnoreBounds = BuildingPlusConfig.IgnoreBounds.Value;
             }
 
-            var zoomCam = __instance.GetComponentInChildren<ZoomCamera>();
+            GameSettings instance = GameSettings.GetInstance();
+            if (BuildingPlusConfig.BypassLevelFullness.Value)
+            {
+                instance.LevelFullnessScoreLimit = int.MaxValue;
+            } else 
+            {
+                instance.LevelFullnessScoreLimit = 500;
+            }
+
+                var zoomCam = __instance.GetComponentInChildren<ZoomCamera>();
+
             if (zoomCam != null)
             {
                 var cam = zoomCam.GetComponent<UnityEngine.Camera>();

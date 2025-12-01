@@ -18,7 +18,8 @@ namespace BuildingPlus
         public static ConfigEntry<KeyCode> ColorPickDialogKey { get; private set; }
         public static ConfigEntry<KeyCode> FreePlacementKey { get; private set; }
         public static ConfigEntry<bool> EnableCustomCamera { get; private set; }
-        public static ConfigEntry<KeyCode> ToggleCameraKey { get; private set; } 
+        public static ConfigEntry<KeyCode> ToggleCameraKey { get; private set; }
+        public static ConfigEntry<bool> BypassLevelFullness { get; private set; }
 
         private static readonly Dictionary<string, ConfigEntry<string>> ButtonColorEntries = new Dictionary<string, ConfigEntry<string>>();
 
@@ -27,56 +28,66 @@ namespace BuildingPlus
             BuildingPlusConfig.config = config;
 
             IgnorePlacementRules = config.Bind(
-                "BuildingPlus",
+                "Placement",
                 "IgnorePlacementRules",
                 false,
                 "If true, all placeables ignore placement rules."
             );
 
             IgnoreBounds = config.Bind(
-                "BuildingPlus",
+                "Placement",
                 "IgnoreBounds",
                 false,
                 "If true, all placeables ignore bounds checks."
             );
+
+            BypassLevelFullness = config.Bind(
+                "Placement",
+                "BypassLevelFullness",
+                false,
+                "If true, level fullness limits will be ignored."
+            );
+
             SelectionUnlockDelay = config.Bind(
-                "BuildingPlus",
+                "Placement",
                 "SelectionUnlockDelay",
                 0f,
-                "Time (in seconds) after placing a picked up Placeable before interaction is re-enabled. Acts as a rework to wait for the detachment process to finish. If you experience crashes increase this value slightly."
+                "Time (in seconds) after placing a picked-up Placeable before interaction is re-enabled."
             );
             ControlSelectionKey = config.Bind(
-                "BuildingPlus",
+                "Controls",
                 "ControlSelectionKey",
                 KeyCode.LeftControl,
                 "Hold this key to select multiple placeables without deselecting others."
             );
 
             ColorPickDialogKey = config.Bind(
-                "BuildingPlus",
+                "Controls",
                 "ColorPickDialogKey",
                 KeyCode.LeftShift,
                 "Press this key to open the color pick dialog for the selected placeable."
             );
 
             FreePlacementKey = config.Bind(
-                "BuildingPlus",
+                "Controls",
                 "FreePlacementKey",
                 KeyCode.LeftAlt,
                 "Hold this key to freely move placeables without grid snapping."
             );
+
             EnableCustomCamera = config.Bind(
-                "BuildingPlus",
+                "Camera",
                 "EnableCustomCamera",
                 true,
                 "If true, the custom 2D camera controller is enabled."
             );
+
             ToggleCameraKey = config.Bind(
-                "BuildingPlus",
+                "Camera",
                 "ToggleCameraKey",
                 KeyCode.F8,
                 "Press this key to toggle between normal camera and custom 2D camera controller."
-                );
+            );
         }
 
         public static void SaveButtonColor(string buttonName, Color color)
