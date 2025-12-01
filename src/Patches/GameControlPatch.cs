@@ -40,7 +40,7 @@ namespace BuildingPlus.Patches
         public static void SetupStartPostfix(GameControl __instance, GameState.GameMode mode)
         {
             if (!(__instance is FreePlayControl)) return;
-
+            var control = (FreePlayControl)__instance;
             if (__instance != null && __instance.gameObject != null)
             {
                 if (__instance.gameObject.GetComponent<Selector>() == null)
@@ -82,19 +82,18 @@ namespace BuildingPlus.Patches
                 var cam = zoomCam.GetComponent<UnityEngine.Camera>();
                 if (cam != null && BuildingPlusConfig.EnableCustomCamera.Value)
                 {
-                    // Make sure ZoomCamera is fully disabled
                     zoomCam.enabled = false;
 
-                    // Remove any existing CameraController2D before adding
                     var existingController = cam.GetComponent<CameraController2D>();
                     if (existingController != null)
                     {
                         UnityEngine.Object.Destroy(existingController);
                     }
 
-                    // Add your custom controller
                     var camControl = cam.gameObject.AddComponent<CameraController2D>();
+                    camControl.SetController(control);
                     __instance.gameObject.AddComponent<CameraToggle>().SetCameras(zoomCam, camControl);
+                    
                 }
             }
         }

@@ -1,10 +1,11 @@
-﻿using BuildingPlus.Selection;
+﻿using System;
+using BuildingPlus.Selection;
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 public class CameraController2D : MonoBehaviour
 {
-    public float dragSpeed = 0.0125f;
+    public float dragSpeed = 0.013f;
     public float edgeScrollSpeed = 25f;
     public float edgeSize = 35f;
 
@@ -12,7 +13,7 @@ public class CameraController2D : MonoBehaviour
     public float minFov = 2f;
     public float maxFov = 125f;
 
-    public float doubleClickTime = 0.3f; // Max time between clicks for double-click
+    public float doubleClickTime = 0.3f; 
 
     private Camera cam;
     private Vector3 lastMousePosition;
@@ -20,15 +21,20 @@ public class CameraController2D : MonoBehaviour
 
     private Vector3 originPosition;
     private float lastMMBClickTime = -1f;
+    private FreePlayControl control;
 
     void Start()
     {
         cam = GetComponent<Camera>();
-        originPosition = transform.position; // Store original camera position
+        originPosition = transform.position; 
     }
 
     void Update()
     {
+        if (control == null || control.InventoryBook == null)
+            return;
+        if (control.InventoryBook.inInventory)
+            return;
         HandleMouseDrag();
         HandleEdgeScroll();
         HandleZoom();
@@ -98,7 +104,7 @@ public class CameraController2D : MonoBehaviour
 
         // Keyboard input
         if (Input.GetKey(KeyCode.LeftAlt))
-            cam.fieldOfView -= scroll * zoomSensitivity * 100f * Time.deltaTime; // multiplied to make scroll feel responsive
+            cam.fieldOfView -= scroll * zoomSensitivity * 100f * Time.deltaTime;
 
         // Clamp to min/max FOV
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minFov, maxFov);
@@ -116,5 +122,10 @@ public class CameraController2D : MonoBehaviour
             }
             lastMMBClickTime = Time.time;
         }
+    }
+
+    internal void SetController(FreePlayControl instance)
+    {
+       control = instance;
     }
 }
