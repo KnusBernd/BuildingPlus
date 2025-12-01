@@ -1,4 +1,5 @@
 ﻿using System;
+using BuildingPlus;
 using BuildingPlus.Selection;
 using UnityEngine;
 
@@ -26,7 +27,13 @@ public class CameraController2D : MonoBehaviour
     void Start()
     {
         cam = GetComponent<Camera>();
-        originPosition = transform.position; 
+        originPosition = transform.position;
+
+        dragSpeed = BuildingPlusConfig.CameraDragSpeed.Value;
+        edgeScrollSpeed = BuildingPlusConfig.CameraEdgeScrollSpeed.Value;
+        zoomSensitivity = BuildingPlusConfig.CameraZoomSensitivity.Value;
+        minFov = BuildingPlusConfig.CameraMinFOV.Value;
+        maxFov = BuildingPlusConfig.CameraMaxFOV.Value;
     }
 
     void Update()

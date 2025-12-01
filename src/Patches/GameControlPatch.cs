@@ -70,12 +70,14 @@ namespace BuildingPlus.Patches
             if (BuildingPlusConfig.BypassLevelFullness.Value)
             {
                 instance.LevelFullnessScoreLimit = int.MaxValue;
+                FreeplayFullMessage message = control.gameObject.GetComponentInChildren<FreeplayFullMessage>();
+                message.enabled = false;
             } else 
             {
                 instance.LevelFullnessScoreLimit = 500;
             }
 
-                var zoomCam = __instance.GetComponentInChildren<ZoomCamera>();
+            var zoomCam = __instance.GetComponentInChildren<ZoomCamera>();
 
             if (zoomCam != null)
             {
@@ -100,7 +102,6 @@ namespace BuildingPlus.Patches
 
         public static void OnDestroyPostfix(GameControl __instance)
         {
-
             var selector = __instance?.gameObject?.GetComponent<Selector>();
             if (selector != null)
             {

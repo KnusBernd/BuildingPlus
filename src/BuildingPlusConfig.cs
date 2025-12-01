@@ -20,6 +20,12 @@ namespace BuildingPlus
         public static ConfigEntry<bool> EnableCustomCamera { get; private set; }
         public static ConfigEntry<KeyCode> ToggleCameraKey { get; private set; }
         public static ConfigEntry<bool> BypassLevelFullness { get; private set; }
+        public static ConfigEntry<float> CameraMinFOV { get; private set; }
+        public static ConfigEntry<float> CameraMaxFOV { get; private set; }
+        public static ConfigEntry<float> CameraDragSpeed { get; private set; }
+        public static ConfigEntry<float> CameraEdgeScrollSpeed { get; private set; }
+        public static ConfigEntry<float> CameraZoomSensitivity { get; private set; }
+
 
         private static readonly Dictionary<string, ConfigEntry<string>> ButtonColorEntries = new Dictionary<string, ConfigEntry<string>>();
 
@@ -78,8 +84,8 @@ namespace BuildingPlus
             EnableCustomCamera = config.Bind(
                 "Camera",
                 "EnableCustomCamera",
-                true,
-                "If true, the custom 2D camera controller is enabled."
+                false,
+                "If true, the custom 2D camera controller component will be added to the Camera."
             );
 
             ToggleCameraKey = config.Bind(
@@ -88,6 +94,42 @@ namespace BuildingPlus
                 KeyCode.F8,
                 "Press this key to toggle between normal camera and custom 2D camera controller."
             );
+
+            CameraMinFOV = config.Bind(
+                "Camera",
+                "MinFOV",
+                2f,
+                "Minimum field of view for the custom camera."
+            );
+
+            CameraMaxFOV = config.Bind(
+                "Camera",
+                "MaxFOV",
+                125f,
+                "Maximum field of view for the custom camera."
+            );
+
+            CameraDragSpeed = config.Bind(
+                "Camera",
+                "DragSpeed",
+                0.013f,
+                "Camera middle-mouse drag movement speed."
+            );
+
+            CameraEdgeScrollSpeed = config.Bind(
+                "Camera",
+                "EdgeScrollSpeed",
+                25f,
+                "Camera movement speed when scrolling near screen edges."
+            );
+
+            CameraZoomSensitivity = config.Bind(
+                "Camera",
+                "ZoomSensitivity",
+                7f,
+                "Sensitivity of zooming in/out with ALT + Scroll."
+            );
+
         }
 
         public static void SaveButtonColor(string buttonName, Color color)
