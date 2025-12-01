@@ -37,7 +37,6 @@ namespace BuildingPlus.Patches
 
         public static void SetupStartPostfix(GameControl __instance, GameState.GameMode mode)
         {
-            BuildingPlusPlugin.LogInfo($"SetupStart called with mode {mode}");
             if (!(__instance is FreePlayControl)) return;
 
             if (__instance != null && __instance.gameObject != null)
@@ -45,7 +44,6 @@ namespace BuildingPlus.Patches
                 if (__instance.gameObject.GetComponent<Selector>() == null)
                 {
                     __instance.gameObject.AddComponent<Selector>();
-                    BuildingPlusPlugin.LogInfo("Selector added.");
                 }
             }
             foreach (Placeable p in Placeable.AllPlaceables)
@@ -65,17 +63,45 @@ namespace BuildingPlus.Patches
                 p.IgnorePlacementRules = BuildingPlusConfig.IgnorePlacementRules.Value;
                 p.IgnoreBounds = BuildingPlusConfig.IgnoreBounds.Value;
             }
+
+            var zoomCam = __instance.GetComponentInChildren<ZoomCamera>();
+            if (zoomCam != null)
+            {
+                var cam = zoomCam.GetComponent<Camera>();
+                if (cam != null)
+                {
+                    // Make sure ZoomCamera is fully disabled
+                    zoomCam.enabled = false;
+                    BuildingPlusPlugin.LogInfo("ZoomCamera disabled.");
+
+                    // Remove any existing CameraController2D before adding
+                    var existingController = cam.GetComponent<CameraController2D>();
+                    if (existingController != null)
+                    {
+                        UnityEngine.Object.Destroy(existingController);
+                    }
+
+                    // Add your custom controller
+                    cam.gameObject.AddComponent<CameraController2D>();
+                    BuildingPlusPlugin.LogInfo("CameraController2D added to camera.");
+                }
+                else
+                {
+                    BuildingPlusPlugin.LogError("CameraController2D ERROR");
+                }
+            } else 
+            {
+                BuildingPlusPlugin.LogError("CameraController2D ERROR 2");
+            }
         }
 
         public static void OnDestroyPostfix(GameControl __instance)
         {
-            BuildingPlusPlugin.LogInfo("GameControl.OnDestroy called.");
 
             var selector = __instance?.gameObject?.GetComponent<Selector>();
             if (selector != null)
             {
                 UnityEngine.Object.Destroy(selector);
-                BuildingPlusPlugin.LogInfo("Selector removed on GameControl destroy.");
             }
             foreach (GameObject g in PlaceableMetadataList.Instance.allBlockPrefabs)
             {

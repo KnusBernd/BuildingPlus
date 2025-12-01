@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="BuildingPlusConfig.cs" />
     <Compile Include="BuildingPlusPlugin.cs" />
+    <Compile Include="Camera\CameraController2D.cs" />
     <Compile Include="Patches\PiecePlacementCursorFixedUpdatePatch.cs" />
     <Compile Include="Patches\InventoryBookPatch.cs" />
     <Compile Include="Patches\PickableCustomizationButtonPatch.cs" />
