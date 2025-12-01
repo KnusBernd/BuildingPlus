@@ -1,55 +1,79 @@
 # BuildingPlus
-Enhanced building tools for Ultimate Chicken Horse, featuring multi-piece manipulation, customizable colors, removal of building restrictions, and more!
+**Enhanced building tools for Ultimate Chicken Horse**, featuring multi-piece manipulation, customizable colors, removal of building restrictions, and more!
 
 ## Multi-Piece Cursor
-In Singleplayer Free Play sessions, the cursor becomes a Multi-Piece Cursor, allowing you to:
+In Singleplayer Free Play sessions, the cursor becomes a **Multi-Piece Cursor**, allowing you to:
 
-- Marquee Select multiple placeables at once.
-- Pick up any placeable in the selection to move the entire group.
-- Copy the selected placeables.
-- Delete all placeables in the selection.
-- Multi-Select: Hold the configurable key (default: Left Control) to select multiple placeables without deselecting others, or to select/deselect individual pieces.
+- **Marquee Select** multiple placeables at once.
+- **Pick up** any placeable in the selection to move the entire group.
+- **Copy** the selected placeables.
+- **Delete** all placeables in the selection.
+- **Multi-Select:** Hold the configurable key **(default: Left Control)** to select multiple placeables without deselecting others, or to select/deselect individual pieces.
 
 ## Free Color Choice
-While in the inventory, hold the configurable key (default: Left Shift) and click on a “Pick a Color” block to open a dialog and choose any color for your placeables.
+While in the inventory, hold the configurable key **(default: Left Shift)** and click on a **“Pick a Color” block** to open a dialog and choose any color for your placeables.
+
+## 2D Camera Controller
+BuildingPlus now adds a **customizable 2D Camera Controller** for Free Play and editor modes.
+
+### Features
+- **Middle Mouse Drag:** Click and drag the middle mouse button to pan the camera smoothly.
+- **Edge Scrolling:** Move the mouse to the screen edges to scroll the camera.
+- **Zooming:** Use the mouse scroll wheel **(hold Left Alt for finer control)** to zoom in and out.
+- **Double-Click Reset:** Double-click the middle mouse button to reset the camera to its **original position**.
+- **Configurable Settings:** Drag speed, edge scroll speed, zoom sensitivity, and min/max zoom levels are all configurable via the plugin's config file.
+
+> **Note:** Holding **Shift** while dragging increases drag speed by **50%**.
+
+### Usage
+- Enable the custom 2D camera in the config with **EnableCustomCamera**.
+- Press the configurable toggle key **(default: F8)** to enable or disable the 2D camera controller at runtime.
+- The camera automatically prevents cursor teleporting by **freezing the in-game cursor** during drags.
 
 ## Faster Placement & Level Loading
-- Placeables are now placed much faster, allowing rapid placement of many pieces at once.
-- Levels load faster due to the optimized placement process.
+- Placeables are now **placed much faster**, allowing rapid placement of many pieces at once.
+- Levels **load faster** due to the optimized placement process.
 
-> **Note:** This feature overlaps with the `LevelLoaderOptimization` mod. If you have BuildingPlus installed, you can safely uninstall `LevelLoaderOptimization`, though the mod still works as a standalone if desired.
+> **Note:** This overlaps with the `LevelLoaderOptimization` mod. You can safely uninstall that mod if using BuildingPlus.
 
 ## Configuration Options
 
 ### Placement Restrictions
-- IgnorePlacementRules – Disable all building restrictions.
-- IgnoreBounds – Ignore placement boundaries for all placeables.
+- **IgnorePlacementRules** – Disable all building restrictions.
+- **IgnoreBounds** – Ignore placement boundaries for all placeables.
+- **BypassLevelFullness** – Ignore level fullness limits.
+- **SelectionUnlockDelay** – Delay (in seconds) before a placed selection can be interacted with again.
 
 ### Control Keys
-- Selection Key – Hold to multi-select without deselecting.
-- Color Change Key – Click with this key to open the color picker dialog.
+- **ControlSelectionKey** – Hold to multi-select without deselecting.
+- **ColorPickDialogKey** – Open the color picker dialog.
+- **FreePlacementKey** – Hold to freely move placeables without grid snapping.
+- **ToggleCameraKey** – Enable or disable the custom 2D camera (default: F8).
 
-### Selection Unlock Delay
-- Configurable delay (in seconds) before selections can be picked up after placing, preventing accidental early pickups during detachment.
+### Camera Settings
+- **EnableCustomCamera** – Toggle whether the 2D camera is active.
+- **CameraDragSpeed** – Adjust the speed of camera panning when dragging.
+- **CameraEdgeScrollSpeed** – Adjust the speed when moving the camera near screen edges.
+- **CameraZoomSensitivity** – Adjust how fast the camera zooms.
+- **CameraMinFOV** – Minimum camera zoom.
+- **CameraMaxFOV** – Maximum camera zoom.
 
 ## Installation / Setup
-
 BuildingPlus is a **BepInEx plugin**, so you must have BepInEx installed for *Ultimate Chicken Horse*.
 
 ### 1. Install BepInEx (if you haven’t already)
-
-1. Download **BepInEx 5.x** for your system (usually **BepInEx x64**).
-2. Extract the archive into your **Ultimate Chicken Horse** game folder.  
+1. Download **BepInEx 5.x** for your system from [this link](https://github.com/bepinex/bepinex/releases
+2. Extract into your **Ultimate Chicken Horse** game folder.
 
 ### 2. Install BuildingPlus
-
 1. Download the latest release from [this link](https://github.com/KnusBernd/BuildingPlus/releases/) or build it yourself.
-2. Place the file into: Ultimate Chicken Horse/BepInEx/plugins/
+2. Place the .dll file into: `Ultimate Chicken Horse/BepInEx/plugins/`
 3. Start the game — BepInEx will load the plugin automatically.
 
 ## Known Issues
-- Quickly picking up a placed selection at different placeables can cause crashes if the detachment or any inner transform progress has not yet finished. (No fix found; the unlock delay is just a workaround.)
+- Quickly picking up a placed selection at different placeables can cause crashes if detachment is still processing.
 - Sometimes the selector gets locked with an active selection when entering the inventory.
-- Attached Pieces such as Wires and Glue wont get copied.
+- Attached pieces such as Wires and Glue won't get copied.
 - Copying sometimes breaks the Selector logic.
-- Copying sometimes creates Highlight dublicates
+- Copying sometimes creates highlight duplicates.
+- The fist Selection sometimes gets magically readded after copying and placing
