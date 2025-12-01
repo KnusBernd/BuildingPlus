@@ -28,7 +28,7 @@ namespace BuildingPlus.Camera
 
         private void ToggleCameras()
         {
-            if (_controller != null) _controller.enabled = _controller.enabled;
+            if (_controller != null) _controller.enabled = !_controller.enabled;
             if (_zoomCamera != null) _zoomCamera.enabled = !_zoomCamera.enabled;
         }
 
