@@ -17,6 +17,8 @@ namespace BuildingPlus
         public static ConfigEntry<KeyCode> ControlSelectionKey { get; private set; }
         public static ConfigEntry<KeyCode> ColorPickDialogKey { get; private set; }
         public static ConfigEntry<KeyCode> FreePlacementKey { get; private set; }
+        public static ConfigEntry<bool> EnableCustomCamera { get; private set; }
+        public static ConfigEntry<KeyCode> ToggleCameraKey { get; private set; } 
 
         private static readonly Dictionary<string, ConfigEntry<string>> ButtonColorEntries = new Dictionary<string, ConfigEntry<string>>();
 
@@ -63,6 +65,18 @@ namespace BuildingPlus
                 KeyCode.LeftAlt,
                 "Hold this key to freely move placeables without grid snapping."
             );
+            EnableCustomCamera = config.Bind(
+                "BuildingPlus",
+                "EnableCustomCamera",
+                true,
+                "If true, the custom 2D camera controller is enabled."
+            );
+            ToggleCameraKey = config.Bind(
+                "BuildingPlus",
+                "ToggleCameraKey",
+                KeyCode.F8,
+                "Press this key to toggle between normal camera and custom 2D camera controller."
+                );
         }
 
         public static void SaveButtonColor(string buttonName, Color color)

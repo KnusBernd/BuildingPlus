@@ -5,10 +5,10 @@ using UnityEngine;
 public class CameraController2D : MonoBehaviour
 {
     public float dragSpeed = 0.01f;
-    public float edgeScrollSpeed = 40f;
-    public float edgeSize = 50f;
+    public float edgeScrollSpeed = 25f;
+    public float edgeSize = 35f;
 
-    public float zoomSensitivity = 20f;
+    public float zoomSensitivity = 7f;
     public float minFov = 2f;
     public float maxFov = 125f;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BuildingPlus.Camera;
 using BuildingPlus.Selection;
 using HarmonyLib;
 using UnityEngine;
@@ -67,12 +68,11 @@ namespace BuildingPlus.Patches
             var zoomCam = __instance.GetComponentInChildren<ZoomCamera>();
             if (zoomCam != null)
             {
-                var cam = zoomCam.GetComponent<Camera>();
-                if (cam != null)
+                var cam = zoomCam.GetComponent<UnityEngine.Camera>();
+                if (cam != null && BuildingPlusConfig.EnableCustomCamera.Value)
                 {
                     // Make sure ZoomCamera is fully disabled
                     zoomCam.enabled = false;
-                    BuildingPlusPlugin.LogInfo("ZoomCamera disabled.");
 
                     // Remove any existing CameraController2D before adding
                     var existingController = cam.GetComponent<CameraController2D>();
@@ -82,16 +82,9 @@ namespace BuildingPlus.Patches
                     }
 
                     // Add your custom controller
-                    cam.gameObject.AddComponent<CameraController2D>();
-                    BuildingPlusPlugin.LogInfo("CameraController2D added to camera.");
+                    var camControl = cam.gameObject.AddComponent<CameraController2D>();
+                    __instance.gameObject.AddComponent<CameraToggle>().SetCameras(zoomCam, camControl);
                 }
-                else
-                {
-                    BuildingPlusPlugin.LogError("CameraController2D ERROR");
-                }
-            } else 
-            {
-                BuildingPlusPlugin.LogError("CameraController2D ERROR 2");
             }
         }
 
