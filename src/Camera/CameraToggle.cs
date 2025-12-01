@@ -12,10 +12,6 @@ namespace BuildingPlus.Camera
         private ZoomCamera _zoomCamera;
         private CameraController2D _controller;
 
-        void Start() 
-        {
-        }
-
         internal void SetCameras(ZoomCamera zoomCamera, CameraController2D controller) 
         { 
             _zoomCamera = zoomCamera;
