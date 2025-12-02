@@ -93,7 +93,7 @@ namespace BuildingPlus
                 "Camera",
                 "EnableCustomCamera",
                 false,
-                "If true, the custom 2D camera controller component will be added to the Camera."
+                "If true, the custom 2D camera controller component will be added to the Camera. Currently only supported by kbm controls."
             );
 
             ToggleCameraKey = config.Bind(
