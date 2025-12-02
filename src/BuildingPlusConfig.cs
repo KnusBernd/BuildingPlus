@@ -14,6 +14,7 @@ namespace BuildingPlus
         public static ConfigEntry<bool> IgnorePlacementRules { get; private set; }
         public static ConfigEntry<bool> IgnoreBounds { get; private set; }
         public static ConfigEntry<float> SelectionUnlockDelay { get; private set; }
+        public static ConfigEntry<float> SelectionDetachmentDelay { get; private set; }
         public static ConfigEntry<KeyCode> ControlSelectionKey { get; private set; }
         public static ConfigEntry<KeyCode> ColorPickDialogKey { get; private set; }
         public static ConfigEntry<KeyCode> FreePlacementKey { get; private set; }
@@ -57,9 +58,17 @@ namespace BuildingPlus
             SelectionUnlockDelay = config.Bind(
                 "Placement",
                 "SelectionUnlockDelay",
-                0f,
+                0.225f,
                 "Time (in seconds) after placing a picked-up Placeable before interaction is re-enabled."
             );
+
+            SelectionDetachmentDelay = config.Bind(
+                "Placement",
+                "SelectionDetachmentDelay",
+                0.325f,
+                "Time (in seconds) to wait after placeables have been placed before dropping the selection."
+            );
+
             ControlSelectionKey = config.Bind(
                 "Controls",
                 "ControlSelectionKey",

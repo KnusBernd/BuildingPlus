@@ -11,8 +11,6 @@ namespace BuildingPlus.Patches
 {
     internal class PlaceablePlacePatch
     {
-        public static int DebugWaitFrames = 60; 
-
         public static void ApplyPatch(Harmony harmony)
         {
             var method = AccessTools.Method(typeof(Placeable), "Place",

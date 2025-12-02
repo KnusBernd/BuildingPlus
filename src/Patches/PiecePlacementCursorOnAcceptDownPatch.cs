@@ -65,7 +65,7 @@ namespace BuildingPlus.Patches
                 return true;
             });
 
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(BuildingPlusConfig.SelectionDetachmentDelay.Value);
             List<Placeable> placed = new List<Placeable>(selected);
             placed.Add(selection.Head);
             selection.Drop();

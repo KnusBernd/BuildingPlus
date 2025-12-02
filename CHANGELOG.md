@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Selection Flow is more intuitive now.
+- Set Useful default values for the delay workarounds.
 
 ### Fixed
 - Single selection didnt ignore ignored placeables

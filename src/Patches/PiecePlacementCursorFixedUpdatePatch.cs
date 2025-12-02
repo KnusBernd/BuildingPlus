@@ -27,7 +27,6 @@ namespace BuildingPlus.Patches
 
             harmony.Patch(original, postfix: new HarmonyMethod(postfix));
 
-            // Bind private fields
             f_tryingToCancel = AccessTools.FieldRefAccess<PiecePlacementCursor, bool>("tryingToCancel");
             f_placementPhysicsLock = AccessTools.FieldRefAccess<PiecePlacementCursor, bool>("placementPhysicsLock");
             f_heldPositionOffset = AccessTools.FieldRefAccess<PiecePlacementCursor, Vector3>("heldPositionOffset");

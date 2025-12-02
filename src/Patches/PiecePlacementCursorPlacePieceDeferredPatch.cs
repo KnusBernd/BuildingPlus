@@ -89,7 +89,7 @@ namespace BuildingPlus.Patches
                 return true;
             });
 
-            yield return new WaitForSeconds(0.3f); // idk maybe do something different but this work for me.
+            yield return new WaitForSeconds(BuildingPlusConfig.SelectionDetachmentDelay.Value); // idk maybe do something different but this work for me.
 
             Selector.Instance.Selection.Drop();
             yield return new WaitForSeconds(BuildingPlusConfig.SelectionUnlockDelay.Value);
