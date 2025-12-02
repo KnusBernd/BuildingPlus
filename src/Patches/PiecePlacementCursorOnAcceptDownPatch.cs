@@ -57,28 +57,33 @@ namespace BuildingPlus.Patches
 
         private static System.Collections.IEnumerator WaitForPlaceablesPlaced()
         {
-            // Capture selected set as array (so it doesn’t update mid-wait)
             SelectionManager selection = Selector.Instance.Selection;
-            var selected = Selector.Instance?.Selection.GetPickedUpPlaceables().ToArray();
-            // BuildingPlusPlugin.LogInfo($"[Coroutine] Waiting for {selected.Length} Placeables to become Placed...");
+
+            var newPlaceables = selection.GetPickedUpPlaceables().ToList();
+
             yield return new UnityEngine.WaitUntil(() =>
             {
-                foreach (var p in selected)
+                foreach (var p in newPlaceables)
                 {
                     if (!p.Placed) return false;
                 }
                 return true;
             });
 
-            yield return new WaitForSeconds(BuildingPlusConfig.SelectionDetachmentDelay.Value);
-            List<Placeable> placed = new List<Placeable>(selected);
-            placed.Add(selection.Head);
+            yield return new WaitForSeconds(
+                BuildingPlusConfig.SelectionDetachmentDelay.Value
+            );
+
             selection.Drop();
-            foreach (var p in placed)
+
+            foreach (var p in newPlaceables)
             {
                 selection.Select(p);
             }
-            yield return new WaitForSeconds(BuildingPlusConfig.SelectionUnlockDelay.Value);
+
+            yield return new WaitForSeconds(
+                BuildingPlusConfig.SelectionUnlockDelay.Value
+            );
             Selector.Instance.Unlock();
         }
     }

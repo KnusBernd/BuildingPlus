@@ -77,31 +77,48 @@ namespace BuildingPlus.Patches
             var cursor = Selector.Instance.Cursor;
             var selection = Selector.Instance.Selection;
             Placeable place = cursor.hoveredPiece;
-            //BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
-            //BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
 
-            // new head
-            Placeable placeable = UnityEngine.Object.Instantiate(place.PickableBlock.placeablePrefab);
-            placeable.GenerateIDOnPick(placeable.ID, cursor.AssociatedGamePlayer.networkNumber);
+            // Neue Head erstellen
+            Placeable placeable = UnityEngine.Object.Instantiate(
+                place.PickableBlock.placeablePrefab
+            );
+            placeable.GenerateIDOnPick(
+                placeable.ID,
+                cursor.AssociatedGamePlayer.networkNumber
+            );
             placeable.SetColor(place.CustomColor);
             placeable.SetInitialDamageLevel(place.damageLevel, true);
-            placeable.transform.SetPositionAndRotation(place.transform.position, place.transform.rotation);
+            placeable.transform.SetPositionAndRotation(
+                place.transform.position,
+                place.transform.rotation
+            );
 
-            var newSel = selection.CopySelectedPlaceablesRelativeTo(placeable, place);
-            yield return new WaitForEndOfFrame();
-            yield return new WaitForEndOfFrame();
-            yield return new WaitForEndOfFrame();
+            // Kopien der children erstellen
+            var newSel = selection.CopySelectedPlaceablesRelativeTo(
+                placeable,
+                place
+            );
+
+            yield return null;
+            yield return null;
+            yield return null;
+
             cursor.SetPiece(placeable, destroyPrevious: true);
-            yield return new WaitForEndOfFrame();
-            selection.GetPickedUpPlaceables().AddRange(newSel);
-            //BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
-            //BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
-            selection.Head = placeable;
-            selection.GetOldSelectedPlaceables().Clear();
-            selection.GetOldSelectedPlaceables().AddRange(selection.GetSelectedPlaceables());
-            yield return new WaitForSeconds(0.1f);
+            yield return null;
 
-            selection.DeselectAll();
+            // WICHTIG: Neue Objekte in pickedUpPlaceables
+            selection.GetPickedUpPlaceables().Clear(); // ← ERST clearen!
+            selection.GetPickedUpPlaceables().Add(placeable);
+            selection.GetPickedUpPlaceables().AddRange(newSel);
+
+            selection.Head = placeable;
+
+            // NICHT mehr die alten in oldSelectedPlaceables speichern
+            // selection.GetOldSelectedPlaceables().Clear();
+            // selection.GetOldSelectedPlaceables().AddRange(...);
+
+            yield return new WaitForSeconds(0.1f);
+            selection.DeselectAll(); // Alte Objekte deselektieren
         }
     }
 }
