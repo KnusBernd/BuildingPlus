@@ -126,7 +126,6 @@ namespace BuildingPlus.Patches
             }
         }
 
-
         public static void OnDestroyPostfix(GameControl __instance)
         {
             var selector = __instance?.gameObject?.GetComponent<Selector>();

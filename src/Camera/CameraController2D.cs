@@ -6,14 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class CameraController2D : MonoBehaviour
 {
-    public float dragSpeed = 0.013f;
-    public float edgeScrollSpeed = 25f;
     public float edgeSize = 35f;
-
-    public float zoomSensitivity = 7f;
-    public float minFov = 2f;
-    public float maxFov = 125f;
-
     public float doubleClickTime = 0.3f; 
 
     private Camera cam;
@@ -28,12 +21,6 @@ public class CameraController2D : MonoBehaviour
     {
         cam = GetComponent<Camera>();
         originPosition = transform.position;
-
-        dragSpeed = BuildingPlusConfig.CameraDragSpeed.Value;
-        edgeScrollSpeed = BuildingPlusConfig.CameraEdgeScrollSpeed.Value;
-        zoomSensitivity = BuildingPlusConfig.CameraZoomSensitivity.Value;
-        minFov = BuildingPlusConfig.CameraMinFOV.Value;
-        maxFov = BuildingPlusConfig.CameraMaxFOV.Value;
     }
 
     void Update()
@@ -73,7 +60,7 @@ public class CameraController2D : MonoBehaviour
             }
 
             // Move camera along world X/Y axes
-            Vector3 move = new Vector3(-delta.x, -delta.y, 0f) * dragSpeed * speedMultiplier;
+            Vector3 move = new Vector3(-delta.x, -delta.y, 0f) * BuildingPlusConfig.CameraDragSpeed.Value * speedMultiplier;
             transform.position += move;
         }
     }
@@ -86,36 +73,51 @@ public class CameraController2D : MonoBehaviour
 
         // Horizontal
         if (Input.mousePosition.x >= Screen.width - edgeSize)
-            move.x += edgeScrollSpeed * Time.deltaTime;
+            move.x += BuildingPlusConfig.CameraEdgeScrollSpeed.Value * Time.deltaTime;
         else if (Input.mousePosition.x <= edgeSize)
-            move.x -= edgeScrollSpeed * Time.deltaTime;
+            move.x -= BuildingPlusConfig.CameraEdgeScrollSpeed.Value * Time.deltaTime;
 
         // Vertical
         // top edge
         if (Input.mousePosition.y >= Screen.height - edgeSize)
-            move.y += edgeScrollSpeed * Time.deltaTime;
+            move.y += BuildingPlusConfig.CameraEdgeScrollSpeed.Value * Time.deltaTime;
 
         // bottom edge (adjusted for invisible bar)
         float bottomThreshold = edgeSize + 20f; // add extra margin for invisible bar
         if (Input.mousePosition.y <= bottomThreshold)
-            move.y -= edgeScrollSpeed * Time.deltaTime;
+            move.y -= BuildingPlusConfig.CameraEdgeScrollSpeed.Value * Time.deltaTime;
 
         transform.position += move;
     }
 
     void HandleZoom()
     {
-        if (Selector.Instance != null && Selector.Instance.Cursor.Piece != null) return;
-        // Mouse scroll wheel input
+        if (Selector.Instance != null && Selector.Instance.Cursor.Piece != null)
+            return;
+
         float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (Mathf.Abs(scroll) < 0.0001f)
+            return;
 
-        // Keyboard input
-        if (Input.GetKey(KeyCode.LeftAlt))
-            cam.fieldOfView -= scroll * zoomSensitivity * 100f * Time.deltaTime;
+        float refFOV = (BuildingPlusConfig.CameraMinFOV.Value + BuildingPlusConfig.CameraMaxFOV.Value) / 2f;
 
-        // Clamp to min/max FOV
-        cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minFov, maxFov);
+        float baseSpeed = BuildingPlusConfig.CameraZoomSensitivity.Value;
+
+        // scale zoom speed based on current FOV relative to midpoint
+        float scale = cam.fieldOfView / refFOV;
+
+        float delta = scroll * baseSpeed * scale * 100f * Time.deltaTime;
+
+        cam.fieldOfView -= delta;
+
+        cam.fieldOfView = Mathf.Clamp(
+            cam.fieldOfView,
+            BuildingPlusConfig.CameraMinFOV.Value,
+            BuildingPlusConfig.CameraMaxFOV.Value
+        );
     }
+
+
 
     void HandleDoubleMMBClick()
     {

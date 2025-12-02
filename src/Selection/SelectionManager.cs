@@ -9,12 +9,14 @@ namespace BuildingPlus.Selection
     public class SelectionManager
     {
         private readonly List<Placeable> oldSelectedPlaceables = new List<Placeable>(); // used when copying
-        private readonly List<Placeable> selectedPlaceables = new List<Placeable>();
+        private readonly HashSet<Placeable> selectedPlaceables = new HashSet<Placeable>();
         private readonly List<Placeable> pickedUpPlaceables = new List<Placeable>();
+        private readonly Dictionary<Placeable, SelectionHighlight> highlightCache = new Dictionary<Placeable, SelectionHighlight>();
         private Placeable head;
+
         public List<Placeable> GetPickedUpPlaceables() => pickedUpPlaceables;
 
-        public List<Placeable> GetSelectedPlaceables() => selectedPlaceables;
+        public List<Placeable> GetSelectedPlaceables() => selectedPlaceables.ToList();
 
         public List<Placeable> GetOldSelectedPlaceables() => oldSelectedPlaceables;
 
@@ -24,26 +26,71 @@ namespace BuildingPlus.Selection
             set { head = value; }
         }
 
-        public void DeselectAll()
+        /// <summary>
+        /// Gets or creates a SelectionHighlight component for the given Placeable, using cache.
+        /// </summary>
+        private SelectionHighlight GetOrCreateHighlight(Placeable place)
         {
-            var copy = selectedPlaceables.ToList();
+            if (place == null || place.gameObject == null)
+                return null;
 
-            foreach (var placeable in copy)
-                Deselect(placeable);
-            selectedPlaceables.Clear();
+            // Try to get from cache
+            if (highlightCache.TryGetValue(place, out var highlight) && highlight != null)
+            {
+                return highlight;
+            }
+
+            // Not in cache or was destroyed - fetch/create it
+            highlight = place.GetComponent<SelectionHighlight>();
+            if (highlight == null)
+                highlight = place.gameObject.AddComponent<SelectionHighlight>();
+
+            // Update cache
+            highlightCache[place] = highlight;
+            return highlight;
         }
 
+        /// <summary>
+        /// Removes a Placeable from the highlight cache (call when destroying placeables).
+        /// </summary>
+        public void RemoveFromCache(Placeable place)
+        {
+            if (place != null)
+            {
+                highlightCache.Remove(place);
+            }
+        }
+
+        /// <summary>
+        /// Clears the entire highlight cache. Useful for cleanup or level changes.
+        /// </summary>
+        public void ClearCache()
+        {
+            highlightCache.Clear();
+        }
+
+        public void DeselectAll()
+        {
+            // Copy to avoid modification during iteration
+            var placeablesToDeselect = new List<Placeable>(selectedPlaceables);
+
+            foreach (var placeable in placeablesToDeselect)
+            {
+                Deselect(placeable);
+            }
+            selectedPlaceables.Clear();
+        }
 
         public void Deselect(Placeable place)
         {
             if (place == null)
                 return;
 
-            var highlight = place.GetComponent<SelectionHighlight>();
-            if (highlight == null)
-                highlight = place.gameObject.AddComponent<SelectionHighlight>();
-
-            highlight.Hide();
+            var highlight = GetOrCreateHighlight(place);
+            if (highlight != null)
+            {
+                highlight.Hide();
+            }
 
             selectedPlaceables.Remove(place);
         }
@@ -53,34 +100,39 @@ namespace BuildingPlus.Selection
             if (place == null)
                 return;
 
-            if (selectedPlaceables.Contains(place) || selectedPlaceables.Contains(place.GetTopPiece()))
+            Placeable topPiece = place.GetTopPiece();
+
+            // Single check for the top piece
+            if (selectedPlaceables.Contains(topPiece))
                 return;
 
-            Placeable newEntry = place.GetTopPiece();
-            selectedPlaceables.Add(newEntry);
+            selectedPlaceables.Add(topPiece);
 
-            // Ensure highlight exists and show it
-            var highlight = newEntry.GetComponent<SelectionHighlight>();
-            if (highlight == null)
-                highlight = newEntry.gameObject.AddComponent<SelectionHighlight>();
-
-            highlight.Show();
+            // Get or create highlight using cache
+            var highlight = GetOrCreateHighlight(topPiece);
+            if (highlight != null)
+            {
+                highlight.Show();
+            }
         }
 
         internal void PickUp(Placeable head)
         {
-            if (head == null || !selectedPlaceables.Contains(head) || !Selector.Instance.CanPickUp) return;
+            if (head == null || !selectedPlaceables.Contains(head) || !Selector.Instance.CanPickUp)
+                return;
+
             pickedUpPlaceables.Clear();
             pickedUpPlaceables.Add(head);
 
             foreach (var place in selectedPlaceables)
             {
-                if (place == null) continue;
-                if (place == head) continue;
-                if (place.gameObject == null) continue;
-                head.AttachPiece(place);
-                pickedUpPlaceables.Add((Placeable)place);
+                if (place != null && place != head && place.gameObject != null)
+                {
+                    head.AttachPiece(place);
+                    pickedUpPlaceables.Add(place);
+                }
             }
+
             this.head = head;
         }
 
@@ -128,15 +180,18 @@ namespace BuildingPlus.Selection
                 p == head ||
                 p.ID == head.ID);
 
-
             if (pieces.Count == 0)
             {
                 return;
             }
 
-            foreach (var p in pieces.Distinct())
+            // Use HashSet to track processed pieces - faster than Distinct()
+            var processed = new HashSet<Placeable>();
+
+            foreach (var p in pieces)
             {
-                if (p == null || p.gameObject == null)
+                // Skip if already processed, null, or destroyed
+                if (p == null || p.gameObject == null || !processed.Add(p))
                     continue;
 
                 Transform t = p.transform;
@@ -152,7 +207,6 @@ namespace BuildingPlus.Selection
                 Quaternion worldRot = t.rotation;
 
                 t.SetParent(null, true);
-
 
                 t.SetPositionAndRotation(worldPos, worldRot);
 
@@ -178,17 +232,20 @@ namespace BuildingPlus.Selection
 
             var cursor = Selector.Instance.Cursor;
             int cursorPlayer = cursor.AssociatedGamePlayer.networkNumber;
-            // The piece the cursor is NOW holding (after pickup)
 
-            Vector3 anchorWorldPos = newHead.transform.position;
-            Quaternion anchorWorldRot = newHead.transform.rotation;
+            // Cache transform reference - accessing .transform has overhead
+            Transform newHeadTransform = newHead.transform;
+            Vector3 anchorWorldPos = newHeadTransform.position;
+            Quaternion anchorWorldRot = newHeadTransform.rotation;
 
             //BuildingPlusPlugin.LogInfo("[Postfix] Anchor world pos = " + anchorWorldPos);
             //BuildingPlusPlugin.LogInfo("[Postfix] Anchor world rot = " + anchorWorldRot.eulerAngles);
 
+            Vector3 reusedOldPos = anchorWorldPos;
+            Quaternion reusedOldRot = anchorWorldRot;
 
-            Vector3 reusedOldPos = newHead.transform.position;
-            Quaternion reusedOldRot = newHead.transform.rotation;
+            // Cache inverse rotation calculation outside loop
+            Quaternion invReusedOldRot = Quaternion.Inverse(reusedOldRot);
 
             // Set the new HEAD
             List<Placeable> newSel = new List<Placeable>();
@@ -197,12 +254,12 @@ namespace BuildingPlus.Selection
                 if (p.ID == oldHead.ID)
                     continue;
 
-                //  Compute original local offset relative to the reused piece
-                Vector3 localOffsetPos =
-                    Quaternion.Inverse(reusedOldRot) * (p.transform.position - reusedOldPos);
+                // Cache transform for this placeable
+                Transform pTransform = p.transform;
 
-                Quaternion localOffsetRot =
-                    Quaternion.Inverse(reusedOldRot) * p.transform.rotation;
+                //  Compute original local offset relative to the reused piece
+                Vector3 localOffsetPos = invReusedOldRot * (pTransform.position - reusedOldPos);
+                Quaternion localOffsetRot = invReusedOldRot * pTransform.rotation;
 
                 //  Apply that offset to the head
                 Vector3 newWorldPos = anchorWorldPos + (anchorWorldRot * localOffsetPos);
@@ -218,11 +275,15 @@ namespace BuildingPlus.Selection
                 placeable.GenerateIDOnPick(placeable.ID, cursorPlayer);
                 placeable.SetColor(p.CustomColor);
                 placeable.SetInitialDamageLevel(p.damageLevel, allowDamageReset: true);
-                placeable.transform.SetPositionAndRotation(newWorldPos, newWorldRot);
+
+                // Cache the new placeable's transform too
+                Transform placeableTransform = placeable.transform;
+                placeableTransform.SetPositionAndRotation(newWorldPos, newWorldRot);
                 placeable.Tint();
                 newSel.Add(placeable);
+
                 // Attach
-                placeable.transform.SetParent(newHead.transform, worldPositionStays: true);
+                placeableTransform.SetParent(newHeadTransform, worldPositionStays: true);
 
                 //BuildingPlusPlugin.LogInfo($"[Postfix] Attached new piece {placeable.name} at {newWorldPos} rot {newWorldRot.eulerAngles}");
             }
