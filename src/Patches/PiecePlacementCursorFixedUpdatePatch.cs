@@ -1,4 +1,5 @@
 ﻿using System;
+using BuildingPlus.Selection;
 using HarmonyLib;
 using UnityEngine;
 
@@ -38,7 +39,9 @@ namespace BuildingPlus.Patches
             if (__instance.Piece == null ||
                 f_tryingToCancel(__instance) ||
                 f_placementPhysicsLock(__instance) ||
-                __instance.WaitingForPlaceMessageResponse)
+                __instance.WaitingForPlaceMessageResponse || 
+                Selector.Instance == null || 
+                LobbyManager.instance.AllLocal)
             {
                 return;
             }
