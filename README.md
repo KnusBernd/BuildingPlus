@@ -11,10 +11,10 @@ In Singleplayer Free Play sessions, the cursor becomes a **Multi-Piece Cursor**,
 - **Multi-Select:** Hold the configurable key **(default: Left Control)** to select multiple placeables without deselecting others, or to select/deselect individual pieces.
 
 ## Free Color Choice
-While in the inventory, hold the configurable key **(default: Left Shift)** and click on a **ìPick a Colorî block** to open a dialog and choose any color for your placeables.
+While in the inventory, hold the configurable key **(default: Left Shift)** and click on a **‚ÄúPick a Color‚Äù block** to open a dialog and choose any color for your placeables.
 
 ## 2D Camera Controller
-BuildingPlus now adds a **customizable 2D Camera Controller** for Free Play and editor modes.
+BuildingPlus now adds a **customizable 2D Camera Controller** for Free Play.
 
 ### Features
 - **Middle Mouse Drag:** Click and drag the middle mouse button to pan the camera smoothly.
@@ -39,36 +39,36 @@ BuildingPlus now adds a **customizable 2D Camera Controller** for Free Play and 
 ## Configuration Options
 
 ### Placement Restrictions
-- **IgnorePlacementRules** ñ Disable all building restrictions.
-- **IgnoreBounds** ñ Ignore placement boundaries for all placeables.
-- **BypassLevelFullness** ñ Ignore level fullness limits.
-- **SelectionUnlockDelay** ñ Delay (in seconds) before a placed selection can be interacted with again.
+- **IgnorePlacementRules** ‚Äì Disable all building restrictions.
+- **IgnoreBounds** ‚Äì Ignore placement boundaries for all placeables.
+- **BypassLevelFullness** ‚Äì Ignore level fullness limits.
+- **SelectionUnlockDelay** ‚Äì Delay (in seconds) before a placed selection can be interacted with again.
 
 ### Control Keys
-- **ControlSelectionKey** ñ Hold to multi-select without deselecting.
-- **ColorPickDialogKey** ñ Open the color picker dialog.
-- **FreePlacementKey** ñ Hold to freely move placeables without grid snapping.
-- **ToggleCameraKey** ñ Toggle between the custom and the default camera controller (default: F8).
+- **ControlSelectionKey** ‚Äì Hold to multi-select without deselecting.
+- **ColorPickDialogKey** ‚Äì Open the color picker dialog.
+- **FreePlacementKey** ‚Äì Hold to freely move placeables without grid snapping.
+- **ToggleCameraKey** ‚Äì Toggle between the custom and the default camera controller (default: F8).
 
 ### Camera Settings
-- **EnableCustomCamera** ñ Toggle whether the 2D camera should be added as an Option to the Camera.
-- **CameraDragSpeed** ñ Adjust the speed of camera panning when dragging.
-- **CameraEdgeScrollSpeed** ñ Adjust the speed when moving the camera near screen edges.
-- **CameraZoomSensitivity** ñ Adjust how fast the camera zooms.
-- **CameraMinFOV** ñ Minimum camera zoom.
-- **CameraMaxFOV** ñ Maximum camera zoom.
+- **EnableCustomCamera** ‚Äì Toggle whether the 2D camera should be added as an Option to the Camera.
+- **CameraDragSpeed** ‚Äì Adjust the speed of camera panning when dragging.
+- **CameraEdgeScrollSpeed** ‚Äì Adjust the speed when moving the camera near screen edges.
+- **CameraZoomSensitivity** ‚Äì Adjust how fast the camera zooms.
+- **CameraMinFOV** ‚Äì Minimum camera zoom.
+- **CameraMaxFOV** ‚Äì Maximum camera zoom.
 
 ## Installation / Setup
 BuildingPlus is a **BepInEx plugin**, so you must have BepInEx installed for *Ultimate Chicken Horse*.
 
-### 1. Install BepInEx (if you havenít already)
+### 1. Install BepInEx (if you haven‚Äôt already)
 1. Download **BepInEx 5.x** for your system from [this link](https://github.com/bepinex/bepinex/releases).
 2. Extract into your **Ultimate Chicken Horse** game folder.
 
 ### 2. Install BuildingPlus
 1. Download the latest release from [this link](https://github.com/KnusBernd/BuildingPlus/releases/) or build it yourself.
 2. Place the .dll file into: `Ultimate Chicken Horse/BepInEx/plugins/`
-3. Start the game ó BepInEx will load the plugin automatically.
+3. Start the game ‚Äî BepInEx will load the plugin automatically.
 
 ## Known Issues
 - Quickly picking up a placed selection at different placeables can cause crashes if detachment is still processing.
