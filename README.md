@@ -48,10 +48,10 @@ BuildingPlus now adds a **customizable 2D Camera Controller** for Free Play and 
 - **ControlSelectionKey** – Hold to multi-select without deselecting.
 - **ColorPickDialogKey** – Open the color picker dialog.
 - **FreePlacementKey** – Hold to freely move placeables without grid snapping.
-- **ToggleCameraKey** – Enable or disable the custom 2D camera (default: F8).
+- **ToggleCameraKey** – Toggle between the custom and the default camera controller (default: F8).
 
 ### Camera Settings
-- **EnableCustomCamera** – Toggle whether the 2D camera is active.
+- **EnableCustomCamera** – Toggle whether the 2D camera should be added as an Option to the Camera.
 - **CameraDragSpeed** – Adjust the speed of camera panning when dragging.
 - **CameraEdgeScrollSpeed** – Adjust the speed when moving the camera near screen edges.
 - **CameraZoomSensitivity** – Adjust how fast the camera zooms.
