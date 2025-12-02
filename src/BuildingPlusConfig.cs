@@ -92,7 +92,7 @@ namespace BuildingPlus
             EnableCustomCamera = config.Bind(
                 "Camera",
                 "EnableCustomCamera",
-                false,
+                true,
                 "If true, the custom 2D camera controller component will be added to the Camera."
             );
 
