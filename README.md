@@ -19,7 +19,7 @@ BuildingPlus now adds a **customizable 2D Camera Controller** for Free Play.
 ### Features
 - **Middle Mouse Drag:** Click and drag the middle mouse button to pan the camera smoothly.
 - **Edge Scrolling:** Move the mouse to the screen edges to scroll the camera.
-- **Zooming:** Use the mouse scroll wheel **(hold Left Alt for finer control)** to zoom in and out.
+- **Zooming:** Use the mouse scroll wheel in combination with the configurable key **(Left Alt)** to zoom in and out.
 - **Double-Click Reset:** Double-click the middle mouse button to reset the camera to its **original position**.
 - **Configurable Settings:** Drag speed, edge scroll speed, zoom sensitivity, and min/max zoom levels are all configurable via the plugin's config file.
 
@@ -27,8 +27,7 @@ BuildingPlus now adds a **customizable 2D Camera Controller** for Free Play.
 
 ### Usage
 - Enable the custom 2D camera in the config with **EnableCustomCamera**.
-- Press the configurable toggle key **(default: F8)** to enable or disable the 2D camera controller at runtime.
-- The camera automatically prevents cursor teleporting by **freezing the in-game cursor** during drags.
+- Press the configurable toggle key **(default: F8)** to toggle between the 2D camera controller and the default one at runtime.
 
 ## Faster Placement & Level Loading
 - Placeables are now **placed much faster**, allowing rapid placement of many pieces at once.
