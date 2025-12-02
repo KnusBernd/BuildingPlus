@@ -41,7 +41,7 @@ namespace BuildingPlus.Patches
                 f_placementPhysicsLock(__instance) ||
                 __instance.WaitingForPlaceMessageResponse || 
                 Selector.Instance == null || 
-                LobbyManager.instance.AllLocal)
+                !LobbyManager.instance.AllLocal)
             {
                 return;
             }
