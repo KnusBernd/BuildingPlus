@@ -111,7 +111,7 @@ namespace BuildingPlus.Selection
             selectionBounds.SetMinMax(min, max);
 
             var placeables = SelectionCheckCollision.checkCollision(selectionBounds);
-
+            selection.GetOldSelectedPlaceables().Clear();
             foreach (var placeable in placeables)
                 selection.Select(placeable);
 
@@ -136,6 +136,7 @@ namespace BuildingPlus.Selection
                 selection.DeselectAll();
             }
             selection.PickUp(hovered);
+            selection.GetOldSelectedPlaceables().Clear();
 
             return true;
         }

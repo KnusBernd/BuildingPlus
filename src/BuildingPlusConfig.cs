@@ -27,7 +27,6 @@ namespace BuildingPlus
         public static ConfigEntry<float> CameraEdgeScrollSpeed { get; private set; }
         public static ConfigEntry<float> CameraZoomSensitivity { get; private set; }
 
-
         private static readonly Dictionary<string, ConfigEntry<string>> ButtonColorEntries = new Dictionary<string, ConfigEntry<string>>();
 
         public static void BindConfig(ConfigFile config)

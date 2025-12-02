@@ -51,7 +51,6 @@ namespace BuildingPlus.Patches
             var cursor = Selector.Instance.Cursor;
             int cursorPlayer = cursor.AssociatedGamePlayer.networkNumber;
 
-
             //BuildingPlusPlugin.LogInfo( $"PickBlockEvent received. PlayerNumber={pickBlockEvent.PlayerNumber}, CursorPlayer={cursorPlayer}");
 
             var selection = Selector.Instance.Selection;
@@ -78,7 +77,6 @@ namespace BuildingPlus.Patches
             var selection = Selector.Instance.Selection;
             Placeable place = cursor.hoveredPiece;
 
-            // Neue Head erstellen
             Placeable placeable = UnityEngine.Object.Instantiate(
                 place.PickableBlock.placeablePrefab
             );
@@ -93,7 +91,6 @@ namespace BuildingPlus.Patches
                 place.transform.rotation
             );
 
-            // Kopien der children erstellen
             var newSel = selection.CopySelectedPlaceablesRelativeTo(
                 placeable,
                 place
@@ -106,19 +103,17 @@ namespace BuildingPlus.Patches
             cursor.SetPiece(placeable, destroyPrevious: true);
             yield return null;
 
-            // WICHTIG: Neue Objekte in pickedUpPlaceables
-            selection.GetPickedUpPlaceables().Clear(); // ← ERST clearen!
+            selection.GetPickedUpPlaceables().Clear();
             selection.GetPickedUpPlaceables().Add(placeable);
             selection.GetPickedUpPlaceables().AddRange(newSel);
 
             selection.Head = placeable;
 
-            // NICHT mehr die alten in oldSelectedPlaceables speichern
-            // selection.GetOldSelectedPlaceables().Clear();
-            // selection.GetOldSelectedPlaceables().AddRange(...);
+            selection.GetOldSelectedPlaceables().Clear();
+            selection.GetOldSelectedPlaceables().AddRange(selection.GetSelectedPlaceables());
 
             yield return new WaitForSeconds(0.1f);
-            selection.DeselectAll(); // Alte Objekte deselektieren
+            selection.DeselectAll(); 
         }
     }
 }
