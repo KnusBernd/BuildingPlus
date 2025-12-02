@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -70,8 +71,7 @@ namespace BuildingPlus.Patches
             if (BuildingPlusConfig.BypassLevelFullness.Value)
             {
                 instance.LevelFullnessScoreLimit = int.MaxValue;
-                FreeplayFullMessage message = control.gameObject.GetComponentInChildren<FreeplayFullMessage>();
-                message.enabled = false;
+                BuildingPlusPlugin.Instance.StartCoroutine(WaitForPostSetupStart(__instance));
             } else 
             {
                 instance.LevelFullnessScoreLimit = 500;
@@ -99,6 +99,33 @@ namespace BuildingPlus.Patches
                 }
             }
         }
+
+        private static IEnumerator WaitForPostSetupStart(GameControl control)
+        {
+            var field = typeof(GameControl).GetField("postSetupStart",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+            if (field == null)
+            {
+                BuildingPlusPlugin.LogError("Could not find GameControl.postSetupStart field!");
+                yield break;
+            }
+
+            while (!(bool)field.GetValue(control))
+                yield return null; // wait one frame
+
+
+            var message = GameObject.FindObjectOfType<FreeplayFullMessage>();
+            if (message != null)
+            {
+                message.gameObject.SetActive(false);
+            }
+            else
+            {
+                BuildingPlusPlugin.LogError("FreeplayFullMessage was not found");
+            }
+        }
+
 
         public static void OnDestroyPostfix(GameControl __instance)
         {
