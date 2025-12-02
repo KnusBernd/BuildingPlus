@@ -78,7 +78,6 @@ namespace BuildingPlus.Selection
                 if (place == null) continue;
                 if (place == head) continue;
                 if (place.gameObject == null) continue;
-                if (place == head) continue; // skip the head itself
                 head.AttachPiece(place);
                 pickedUpPlaceables.Add((Placeable)place);
             }

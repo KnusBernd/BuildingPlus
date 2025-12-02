@@ -88,11 +88,11 @@ namespace BuildingPlus.Patches
             placeable.transform.SetPositionAndRotation(place.transform.position, place.transform.rotation);
 
             var newSel = selection.CopySelectedPlaceablesRelativeTo(placeable, place);
-            yield return null;
-            yield return null;
-            yield return null;
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
             cursor.SetPiece(placeable, destroyPrevious: true);
-            yield return null;
+            yield return new WaitForEndOfFrame();
             selection.GetPickedUpPlaceables().AddRange(newSel);
             //BuildingPlusPlugin.LogInfo("selection: " + selection.GetSelectedPlaceables().Count);
             //BuildingPlusPlugin.LogInfo("picked up: " + selection.GetPickedUpPlaceables().Count);
