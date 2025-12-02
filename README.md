@@ -26,7 +26,7 @@ BuildingPlus now adds a **customizable 2D Camera Controller** for Free Play.
 > **Note:** Holding **Shift** while dragging increases drag speed by **50%**.
 
 ### Usage
-- Enable the custom 2D camera in the config with **EnableCustomCamera**.
+- Enable the custom camera controler in the config by setting **EnableCustomCamera** to `true`.
 - Press the configurable toggle key **(default: F8)** to toggle between the 2D camera controller and the default one at runtime.
 
 ## Faster Placement & Level Loading
