@@ -17,3 +17,4 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Single selection didnt ignore ignored placeables
 - Couldn't pick up pieces in multiplayer freeplay sessions.
+- Old selection magically would be readded

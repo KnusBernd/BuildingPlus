@@ -62,7 +62,7 @@ BuildingPlus now adds a **customizable 2D Camera Controller** for Free Play and 
 BuildingPlus is a **BepInEx plugin**, so you must have BepInEx installed for *Ultimate Chicken Horse*.
 
 ### 1. Install BepInEx (if you haven’t already)
-1. Download **BepInEx 5.x** for your system from [this link](https://github.com/bepinex/bepinex/releases
+1. Download **BepInEx 5.x** for your system from [this link](https://github.com/bepinex/bepinex/releases).
 2. Extract into your **Ultimate Chicken Horse** game folder.
 
 ### 2. Install BuildingPlus
@@ -76,4 +76,3 @@ BuildingPlus is a **BepInEx plugin**, so you must have BepInEx installed for *Ul
 - Attached pieces such as Wires and Glue won't get copied.
 - Copying sometimes breaks the Selector logic.
 - Copying sometimes creates highlight duplicates.
-- The fist Selection sometimes gets magically readded after copying and placing
