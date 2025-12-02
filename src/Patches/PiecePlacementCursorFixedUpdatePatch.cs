@@ -40,8 +40,7 @@ namespace BuildingPlus.Patches
                 f_tryingToCancel(__instance) ||
                 f_placementPhysicsLock(__instance) ||
                 __instance.WaitingForPlaceMessageResponse || 
-                Selector.Instance == null || 
-                LobbyManager.instance.AllLocal)
+                Selector.Instance == null)
             {
                 return;
             }
