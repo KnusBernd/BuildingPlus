@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BuildingPlus.Selection;
 using HarmonyLib;
 using UnityEngine;
@@ -11,7 +10,6 @@ namespace BuildingPlus.Patches
 {
     internal class PiecePlacementCursorOnAcceptDownPatch
     {
-
         public static void ApplyPatch(Harmony harmony)
         {
             var onAcceptDownMethod = AccessTools.Method(typeof(PiecePlacementCursor), "OnAcceptDown");
@@ -19,11 +17,9 @@ namespace BuildingPlus.Patches
             {
                 var prefix = AccessTools.Method(typeof(PiecePlacementCursorOnAcceptDownPatch), nameof(OnAcceptDownPrefix));
                 var postfix = AccessTools.Method(typeof(PiecePlacementCursorOnAcceptDownPatch), nameof(OnAcceptDownPostfix));
-
                 harmony.Patch(onAcceptDownMethod,
                     prefix: new HarmonyMethod(prefix),
                     postfix: new HarmonyMethod(postfix));
-
             }
             else
             {
@@ -41,49 +37,95 @@ namespace BuildingPlus.Patches
         private static void OnAcceptDownPostfix(PiecePlacementCursor __instance)
         {
             SelectionManager selection = Selector.Instance.Selection;
-            //BuildingPlusPlugin.LogInfo("postfix accept down ");
-            if (selection.Head != null) 
+
+            if (selection.Head != null)
             {
-                //BuildingPlusPlugin.LogInfo("postfix cleaning up drop");
                 Selector.Instance.Lock();
-                // just make sure each child gets placed
-                foreach (var p in selection.GetPickedUpPlaceables()) 
+
+                // Ensure all picked up pieces get placed
+                var pickedUpPlaceables = selection.GetPickedUpPlaceables().ToList();
+                foreach (var p in pickedUpPlaceables)
                 {
-                    p.Place(0);
+                    if (p != null && p.gameObject != null)
+                    {
+                        p.Place(0);
+                    }
                 }
+
                 BuildingPlusPlugin.Instance.StartCoroutine(WaitForPlaceablesPlaced());
             }
         }
 
-        private static System.Collections.IEnumerator WaitForPlaceablesPlaced()
+        private static IEnumerator WaitForPlaceablesPlaced()
         {
             SelectionManager selection = Selector.Instance.Selection;
-
             var newPlaceables = selection.GetPickedUpPlaceables().ToList();
 
-            yield return new UnityEngine.WaitUntil(() =>
+            // Safety check: ensure we have placeables to wait for
+            if (newPlaceables == null || newPlaceables.Count == 0)
             {
+                Selector.Instance.Unlock();
+                yield break;
+            }
+
+            // Remove any null entries before waiting
+            newPlaceables.RemoveAll(p => p == null || p.gameObject == null);
+
+            if (newPlaceables.Count == 0)
+            {
+                Selector.Instance.Unlock();
+                yield break;
+            }
+
+            // Wait until all placeables are placed
+            float timeout = 5f; // 5 second timeout to prevent infinite waiting
+            float elapsed = 0f;
+
+            yield return new WaitUntil(() =>
+            {
+                elapsed += Time.deltaTime;
+
+                // Timeout check
+                if (elapsed >= timeout)
+                {
+                    BuildingPlusPlugin.LogWarning("[WaitForPlaceablesPlaced] Timeout reached. Proceeding anyway.");
+                    return true;
+                }
+
+                // Check if all valid placeables are placed
                 foreach (var p in newPlaceables)
                 {
-                    if (!p.Placed) return false;
+                    if (p == null || p.gameObject == null)
+                        continue;
+
+                    if (!p.Placed)
+                        return false;
                 }
                 return true;
             });
 
+            // Delay before detaching
             yield return new WaitForSeconds(
                 BuildingPlusConfig.SelectionDetachmentDelay.Value
             );
 
+            // Detach all pieces
             selection.Drop();
 
+            // Re-select the newly placed pieces
             foreach (var p in newPlaceables)
             {
-                selection.Select(p);
+                if (p != null && p.gameObject != null)
+                {
+                    selection.Select(p);
+                }
             }
 
+            // Delay before unlocking
             yield return new WaitForSeconds(
                 BuildingPlusConfig.SelectionUnlockDelay.Value
             );
+
             Selector.Instance.Unlock();
         }
     }
