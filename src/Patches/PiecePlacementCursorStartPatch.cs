@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BuildingPlus.Selection;
 using HarmonyLib;
+using UnityEngine;
 
 namespace BuildingPlus.Patches
 {
@@ -29,8 +30,7 @@ namespace BuildingPlus.Patches
 
         public static void StartPostfix(PiecePlacementCursor __instance)
         {
-            if (LobbyManager.instance.AllLocal)
-                BuildingPlusPlugin.Instance.StartCoroutine(WaitForPlayer(__instance));
+            BuildingPlusPlugin.Instance.StartCoroutine(WaitForPlayer(__instance));
         }
 
         private static IEnumerator WaitForPlayer(PiecePlacementCursor cursor)
@@ -44,8 +44,9 @@ namespace BuildingPlus.Patches
                 if (++waitFrames > maxWaitFrames) yield break;
             }
 
-            if (cursor.AssociatedGamePlayer.networkNumber == 1)
+            if (cursor.AssociatedGamePlayer.isLocalPlayer)
             {
+                if (!LobbyManager.instance.AllLocal) yield return null;
 
                 waitFrames = 0;
                 while (Selector.Instance == null)
