@@ -10,6 +10,7 @@ namespace BuildingPlus.Patches
 {
     internal class PiecePlacementCursorOnAcceptDownPatch
     {
+        private static bool isProcessingPlacement = false;
         public static void ApplyPatch(Harmony harmony)
         {
             var onAcceptDownMethod = AccessTools.Method(typeof(PiecePlacementCursor), "OnAcceptDown");
@@ -29,6 +30,10 @@ namespace BuildingPlus.Patches
 
         private static bool OnAcceptDownPrefix(PiecePlacementCursor __instance)
         {
+            // Block selection events during placement processing
+            if (isProcessingPlacement)
+                return false;
+
             if (LobbyManager.instance.AllLocal)
                 return Selector.Instance.OnAcceptDown();
             return true;
@@ -37,9 +42,9 @@ namespace BuildingPlus.Patches
         private static void OnAcceptDownPostfix(PiecePlacementCursor __instance)
         {
             SelectionManager selection = Selector.Instance.Selection;
-
             if (selection.Head != null)
             {
+                isProcessingPlacement = true; // Block selection events
                 Selector.Instance.Lock();
 
                 // Ensure all picked up pieces get placed
@@ -64,6 +69,7 @@ namespace BuildingPlus.Patches
             // Safety check: ensure we have placeables to wait for
             if (newPlaceables == null || newPlaceables.Count == 0)
             {
+                isProcessingPlacement = false; // Re-enable selection
                 Selector.Instance.Unlock();
                 yield break;
             }
@@ -73,31 +79,27 @@ namespace BuildingPlus.Patches
 
             if (newPlaceables.Count == 0)
             {
+                isProcessingPlacement = false; // Re-enable selection
                 Selector.Instance.Unlock();
                 yield break;
             }
 
             // Wait until all placeables are placed
-            float timeout = 5f; // 5 second timeout to prevent infinite waiting
+            float timeout = 5f;
             float elapsed = 0f;
-
             yield return new WaitUntil(() =>
             {
                 elapsed += Time.deltaTime;
-
-                // Timeout check
                 if (elapsed >= timeout)
                 {
                     BuildingPlusPlugin.LogWarning("[WaitForPlaceablesPlaced] Timeout reached. Proceeding anyway.");
                     return true;
                 }
 
-                // Check if all valid placeables are placed
                 foreach (var p in newPlaceables)
                 {
                     if (p == null || p.gameObject == null)
                         continue;
-
                     if (!p.Placed)
                         return false;
                 }
@@ -109,13 +111,19 @@ namespace BuildingPlus.Patches
                 BuildingPlusConfig.SelectionDetachmentDelay.Value
             );
 
+            // Clear ALL selections before detaching to prevent interference
+            selection.DeselectAll();
+
             // Detach all pieces
             selection.Drop();
 
-            // Re-select the newly placed pieces
+            // Wait a frame to ensure deselection is complete
+            yield return null;
+
+            // Re-select ONLY the newly placed pieces
             foreach (var p in newPlaceables)
             {
-                if (p != null && p.gameObject != null)
+                if (p != null && p.gameObject != null && p.Placed)
                 {
                     selection.Select(p);
                 }
@@ -126,6 +134,7 @@ namespace BuildingPlus.Patches
                 BuildingPlusConfig.SelectionUnlockDelay.Value
             );
 
+            isProcessingPlacement = false; // Re-enable selection events
             Selector.Instance.Unlock();
         }
     }

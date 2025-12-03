@@ -8,8 +8,8 @@ namespace BuildingPlus.Selection
     {
         public static Selector Instance;
 
-        private bool isDraggingBox = false;     
-        private bool pressed = false;          
+        private bool isDraggingBox = false;
+        private bool pressed = false;
         private Vector3 startPos;
         private Vector3 endPos;
         private bool selectionLocked = false;
@@ -22,7 +22,7 @@ namespace BuildingPlus.Selection
 
         private bool sprinting;
 
-        private float dragThreshold = 0.2f; 
+        private float dragThreshold = 0.2f;
 
         private SelectorUI selectorUI;
 
@@ -69,7 +69,6 @@ namespace BuildingPlus.Selection
             if (Cursor.Piece != null)
                 return true;
 
-
             pressed = true;
             isDraggingBox = false;
 
@@ -89,7 +88,7 @@ namespace BuildingPlus.Selection
             pressed = false;
 
             Placeable hovered = Cursor.hoveredPiece;
-            if (hovered != null && !CanPickUp) { return false;  }
+            if (hovered != null && !CanPickUp) { return false; }
 
             // Drag select mode
             if (isDraggingBox)
@@ -99,9 +98,13 @@ namespace BuildingPlus.Selection
             return HandleClickSelection();
         }
 
-       
+
         private bool HandleDragSelection()
         {
+            // Don't modify selection if locked
+            if (selectionLocked)
+                return false;
+
             selectorUI.ShowOutline(false);
 
             Vector3 min = Vector3.Min(startPos, endPos);
@@ -120,6 +123,10 @@ namespace BuildingPlus.Selection
 
         private bool HandleClickSelection()
         {
+            // Don't modify selection if locked
+            if (selectionLocked)
+                return false;
+
             var hovered = Cursor.hoveredPiece;
 
             // Nothing hovered and nothing selected
@@ -131,7 +138,7 @@ namespace BuildingPlus.Selection
                 return HandleSingleSelect(hovered);
 
             // Normal click = pick up hovered
-            if (hovered is MultipiecePart) 
+            if (hovered is MultipiecePart)
             {
                 selection.DeselectAll();
             }
@@ -143,6 +150,10 @@ namespace BuildingPlus.Selection
 
         private bool HandleSingleSelect(Placeable hovered)
         {
+            // Don't modify selection if locked
+            if (selectionLocked)
+                return false;
+
             if (SelectionCheckCollision.IgnoringPlacements.Contains(hovered.name)) return false;
 
             if (selection.GetSelectedPlaceables().Contains(hovered))
@@ -170,7 +181,7 @@ namespace BuildingPlus.Selection
             selectionLocked = true;
         }
 
-        internal void Unlock() 
+        internal void Unlock()
         {
             selectionLocked = false;
         }
