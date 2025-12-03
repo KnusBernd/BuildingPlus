@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.1.1]
+
+### Fixed
+- While in menu the custom camera controller was still active
+- Old selection magically would be readded (this time for good (i hope))
+- Fixed Offgrid Placement not working in Freeplay
+
 ## [0.1.0]
 ### Added
 - Static 2D camera controller in freeplay

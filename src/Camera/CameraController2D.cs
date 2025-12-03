@@ -1,6 +1,7 @@
 ﻿using System;
 using BuildingPlus;
 using BuildingPlus.Selection;
+using HarmonyLib;
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
@@ -17,6 +18,8 @@ public class CameraController2D : MonoBehaviour
     private float lastMMBClickTime = -1f;
     private FreePlayControl control;
 
+    private static AccessTools.FieldRef<InventoryBook, int> _cursorCounterRef = AccessTools.FieldRefAccess<int>(typeof(InventoryBook), "cursorCounter");
+
     void Start()
     {
         cam = GetComponent<Camera>();
@@ -27,7 +30,7 @@ public class CameraController2D : MonoBehaviour
     {
         if (control == null || control.InventoryBook == null)
             return;
-        if (control.InventoryBook.inInventory)
+        if (_cursorCounterRef(control.InventoryBook) > 0)
             return;
         HandleMouseDrag();
         HandleEdgeScroll();
