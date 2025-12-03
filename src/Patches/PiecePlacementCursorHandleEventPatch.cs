@@ -112,7 +112,7 @@ namespace BuildingPlus.Patches
             selection.GetOldSelectedPlaceables().Clear();
             selection.GetOldSelectedPlaceables().AddRange(selection.GetSelectedPlaceables());
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.08f);
             selection.DeselectAll(); 
         }
     }
