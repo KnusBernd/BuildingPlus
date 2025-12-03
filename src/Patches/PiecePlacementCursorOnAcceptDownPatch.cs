@@ -30,13 +30,19 @@ namespace BuildingPlus.Patches
 
         private static bool OnAcceptDownPrefix(PiecePlacementCursor __instance)
         {
-            // Block selection events during placement processing
-            if (isProcessingPlacement)
-                return false;
+            if (!LobbyManager.instance.AllLocal)
+                return true;
 
-            if (LobbyManager.instance.AllLocal)
-                return Selector.Instance.OnAcceptDown();
-            return true;
+            if (Selector.Instance == null)
+                return true;
+
+            if (isProcessingPlacement)
+            {
+                BuildingPlusPlugin.LogWarning("Blocked placement - still processing previous placement");
+                return false;
+            }
+
+            return Selector.Instance.OnAcceptDown();
         }
 
         private static void OnAcceptDownPostfix(PiecePlacementCursor __instance)

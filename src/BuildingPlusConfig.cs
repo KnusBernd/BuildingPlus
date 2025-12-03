@@ -135,7 +135,7 @@ namespace BuildingPlus
                 "Camera",
                 "ZoomSensitivity",
                 7f,
-                "Sensitivity of zooming in/out with ALT + Scroll."
+                "Sensitivity of zooming in/out with the Scrollwheel."
             );
 
         }
