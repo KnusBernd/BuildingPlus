@@ -20,7 +20,7 @@ namespace BuildingPlus.Patches
             }
             else
             {
-                BuildingPlusPlugin.LogError("Failed to find PiecePlacementCursor.OnSprintUp");
+                BuildingPlusPlugin.LogError("Failed to find PiecePlacementCursor.OnSprintDown");
             }
         }
 

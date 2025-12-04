@@ -140,7 +140,6 @@ namespace BuildingPlus.Selection
         {
             if (head == null || head.gameObject == null)
             {
-                //BuildingPlusPlugin.LogWarning("[Drop] Head was null or destroyed. Cleaning up.");
                 head = null;
                 pickedUpPlaceables.Clear();
                 return;
@@ -149,21 +148,15 @@ namespace BuildingPlus.Selection
             // If only head remains, no need to detach
             if (pickedUpPlaceables.Count <= 1)
             {
-                //BuildingPlusPlugin.LogInfo("[Drop] No attached pieces to detach.");
                 head = null;
                 pickedUpPlaceables.Clear();
                 return;
             }
-            //head.DetachAllChildren(true);
-            foreach (var place in pickedUpPlaceables)
-            {
-                //place.GetComponent<SelectionHighlight>().RefreshBounds();
-            }
+
             DetachPieces(head, pickedUpPlaceables);
 
             head = null;
             pickedUpPlaceables.Clear();
-            //BuildingPlusPlugin.LogInfo("[Drop] Completed safely.");
         }
 
         public void DetachPieces(Placeable head, List<Placeable> pieces)
@@ -238,8 +231,6 @@ namespace BuildingPlus.Selection
             Vector3 anchorWorldPos = newHeadTransform.position;
             Quaternion anchorWorldRot = newHeadTransform.rotation;
 
-            //BuildingPlusPlugin.LogInfo("[Postfix] Anchor world pos = " + anchorWorldPos);
-            //BuildingPlusPlugin.LogInfo("[Postfix] Anchor world rot = " + anchorWorldRot.eulerAngles);
 
             Vector3 reusedOldPos = anchorWorldPos;
             Quaternion reusedOldRot = anchorWorldRot;
@@ -247,7 +238,6 @@ namespace BuildingPlus.Selection
             // Cache inverse rotation calculation outside loop
             Quaternion invReusedOldRot = Quaternion.Inverse(reusedOldRot);
 
-            // Set the new HEAD
             List<Placeable> newSel = new List<Placeable>();
             foreach (var p in selectedPlaceables)
             {
@@ -285,7 +275,6 @@ namespace BuildingPlus.Selection
                 // Attach
                 placeableTransform.SetParent(newHeadTransform, worldPositionStays: true);
 
-                //BuildingPlusPlugin.LogInfo($"[Postfix] Attached new piece {placeable.name} at {newWorldPos} rot {newWorldRot.eulerAngles}");
             }
             return newSel;
         }

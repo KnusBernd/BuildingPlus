@@ -46,7 +46,6 @@ namespace BuildingPlus.Patches
             bool pieceWasPickedUp
         )
         {
-           // BuildingPlusPlugin.LogInfo("[Postfix] PlacePieceDeferred called");
 
             if (piece == null)
                 return;
@@ -70,7 +69,6 @@ namespace BuildingPlus.Patches
                 place.Place(__instance.AssociatedGamePlayer.networkNumber);
             }
             BuildingPlusPlugin.Instance.StartCoroutine(WaitForPlaceablesPlaced());
-            //BuildingPlusPlugin.LogInfo("Dropping Selection");
 
         }
 
@@ -78,7 +76,6 @@ namespace BuildingPlus.Patches
         {
             // Capture selected set as array (so it doesn’t update mid-wait)
             var selected = Selector.Instance?.Selection.GetPickedUpPlaceables().ToArray();
-            // BuildingPlusPlugin.LogInfo($"[Coroutine] Waiting for {selected.Length} Placeables to become Placed...");
 
             yield return new UnityEngine.WaitUntil(() =>
             {
