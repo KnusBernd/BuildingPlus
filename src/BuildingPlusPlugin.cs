@@ -13,7 +13,7 @@ using UnityEngine;
 namespace BuildingPlus
 {
 
-    [BepInPlugin("BuildingPlus", "BuildingPlus", "0.1.1")]
+    [BepInPlugin("BuildingPlus", "BuildingPlus", "0.1.2")]
     public class BuildingPlusPlugin : BaseUnityPlugin
     {
 

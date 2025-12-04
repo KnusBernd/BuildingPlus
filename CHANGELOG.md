@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.1.2]
+
+### Fixed
+- couldnt place placeables in non freeplay/multiplayer situations.
+
 ## [0.1.1]
 
 ### Fixed
